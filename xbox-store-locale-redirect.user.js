@@ -4,6 +4,7 @@
 // @version      1.2
 // @description  Redirige automáticamente URLs de Xbox en-US a es-MX en la tienda de juegos.
 // @author       g31w0fw0rld
+// @license      MIT
 // @match        https://www.xbox.com/en-us/games/store/*
 // @match        https://www.xbox.com/en-US/games/store/*
 // @downloadURL  https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js
