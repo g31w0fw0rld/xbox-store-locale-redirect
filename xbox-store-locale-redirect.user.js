@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.1.0
+// @version      2.2.0
 // @description  Redirige las páginas de Xbox Store al idioma/región del navegador, y en la lista de deseos (/wishlist) agrega ordenar y filtrar (por agregado, nombre, precio y descuento; filtro "solo con descuento") con recuerdo de la elección y URL compartible.
 // @author       g31w0fw0rld
 // @license      MIT
@@ -20,6 +20,31 @@
     // =============================================
     const WISHLIST_PATH_REGEX = /\/wishlist(?:\/|$)/i;
     function isWishlist() { return WISHLIST_PATH_REGEX.test(location.pathname); }
+
+    // =============================================
+    // IDIOMA (auto-detect: si la página/navegador está en español -> es, si no -> en)
+    // =============================================
+    // Prioriza el lang del documento (idioma con que Xbox sirve la página) y
+    // cae al del navegador. Solo distingue español vs. resto (inglés por defecto).
+    function detectLang() {
+        const docLang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+        const navLang = (navigator.language || navigator.languages?.[0] || '').toLowerCase();
+        return (docLang || navLang).startsWith('es') ? 'es' : 'en';
+    }
+    const LANG = detectLang();
+    const I18N = {
+        es: {
+            sortLabel: 'Ordenar:', added: 'Agregado', name: 'Nombre', price: 'Precio', discount: 'Descuento',
+            dirTitle: 'Ascendente / Descendente', onlyDiscount: 'Solo con descuento', remember: 'Recordar',
+            copy: '🔗 Copiar enlace', copied: '✔ Copiado', copyPrompt: 'Copia este enlace:',
+        },
+        en: {
+            sortLabel: 'Sort:', added: 'Added', name: 'Name', price: 'Price', discount: 'Discount',
+            dirTitle: 'Ascending / Descending', onlyDiscount: 'Only discounted', remember: 'Remember',
+            copy: '🔗 Copy link', copied: '✔ Copied', copyPrompt: 'Copy this link:',
+        },
+    };
+    const t = I18N[LANG];
 
     // =============================================
     // LOCALE REDIRECT (solo en páginas de producto de la tienda)
@@ -72,7 +97,7 @@
     const STYLES_ID = 'xbwl-styles';
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
-    const SORT_LABELS = { added: 'Agregado', name: 'Nombre', price: 'Precio', discount: 'Descuento' };
+    const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
 
     let settings = loadSettings();
     let applying = false;          // silencia el observer al reordenar
@@ -223,7 +248,7 @@
         bar.id = TOOLBAR_ID;
 
         const sortLabel = document.createElement('label');
-        sortLabel.appendChild(document.createTextNode('Ordenar:'));
+        sortLabel.appendChild(document.createTextNode(t.sortLabel));
         const sortSel = document.createElement('select');
         SORTS.forEach((s) => {
             const o = document.createElement('option');
@@ -242,7 +267,7 @@
         const dirBtn = document.createElement('button');
         dirBtn.type = 'button';
         dirBtn.className = 'xbwl-dir';
-        dirBtn.title = 'Ascendente / Descendente';
+        dirBtn.title = t.dirTitle;
         dirBtn.textContent = settings.dir === 'desc' ? '↓' : '↑';
         dirBtn.addEventListener('click', () => {
             settings.dir = settings.dir === 'desc' ? 'asc' : 'desc';
@@ -256,7 +281,7 @@
         discChk.checked = !!settings.onlyDiscount;
         discChk.addEventListener('change', () => { settings.onlyDiscount = discChk.checked; persistIfRemember(); apply(); });
         discLabel.appendChild(discChk);
-        discLabel.appendChild(document.createTextNode('Solo con descuento'));
+        discLabel.appendChild(document.createTextNode(t.onlyDiscount));
 
         const remLabel = document.createElement('label');
         const remChk = document.createElement('input');
@@ -264,21 +289,21 @@
         remChk.checked = settings.remember !== false;
         remChk.addEventListener('change', () => { settings.remember = remChk.checked; saveSettings(); });
         remLabel.appendChild(remChk);
-        remLabel.appendChild(document.createTextNode('Recordar'));
+        remLabel.appendChild(document.createTextNode(t.remember));
 
         const shareBtn = document.createElement('button');
         shareBtn.type = 'button';
         shareBtn.className = 'xbwl-share';
-        shareBtn.textContent = '🔗 Copiar enlace';
+        shareBtn.textContent = t.copy;
         shareBtn.addEventListener('click', async () => {
             const url = buildShareUrl();
             try {
                 if (navigator.clipboard?.writeText) {
                     await navigator.clipboard.writeText(url);
-                    shareBtn.textContent = '✔ Copiado';
-                    setTimeout(() => { shareBtn.textContent = '🔗 Copiar enlace'; }, 2000);
-                } else { window.prompt('Copia este enlace:', url); }
-            } catch (e) { window.prompt('Copia este enlace:', url); }
+                    shareBtn.textContent = t.copied;
+                    setTimeout(() => { shareBtn.textContent = t.copy; }, 2000);
+                } else { window.prompt(t.copyPrompt, url); }
+            } catch (e) { window.prompt(t.copyPrompt, url); }
         });
 
         bar.appendChild(sortLabel);
