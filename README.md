@@ -17,7 +17,7 @@ La preferencia de país/idioma se guarda en una cookie de `xbox.com`; el resto e
 
 **Instalación:**
 1. Instala [Tampermonkey](https://www.tampermonkey.net/).
-2. Abre el instalador: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (también en GreasyFork y OpenUserJS).
+2. Abre el instalador: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (también en [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) y [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
 
 **Sitios:** `xbox.com/…/games/store/*`, `xbox.com/…/wishlist`
 
@@ -36,7 +36,7 @@ The country/language preference is stored in an `xbox.com` cookie; the rest in `
 
 **Install:**
 1. Install [Tampermonkey](https://www.tampermonkey.net/).
-2. Open the installer: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (also on GreasyFork and OpenUserJS).
+2. Open the installer: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (also on [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) and [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
 
 **Sites:** `xbox.com/…/games/store/*`, `xbox.com/…/wishlist`
 
