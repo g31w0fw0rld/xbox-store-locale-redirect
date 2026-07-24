@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.3.1
+// @version      2.3.2
 // @description  Redirige las páginas de Xbox Store al idioma/región elegido (o del navegador), y en la lista de deseos (/wishlist) agrega ordenar y filtrar (por agregado, nombre, precio y descuento; filtro "solo con descuento") con recuerdo de la elección, URL compartible, selector de país/idioma de redirección y botón "Saber más".
 // @author       g31w0fw0rld
 // @license      MIT
@@ -39,17 +39,18 @@
             copy: '🔗 Copiar enlace', copied: '✔ Copiado', copyPrompt: 'Copia este enlace:',
             about: 'ℹ️ Saber más', close: 'Cerrar', auto: 'Auto (navegador)',
             regionLabel: 'Redirección:', langLabel: 'Idioma', countryLabel: 'País',
+            applyLabel: '✔ Aplicar', applyTip: 'Guarda el locale elegido y aplica la redirección ahora (recarga esta página, incluida la lista de deseos, en ese idioma/país). Con "Auto" no redirige.',
             sortTip: 'Ordena tu lista de deseos por fecha de agregado, nombre, precio o porcentaje de descuento.',
             dirTip: 'Alterna entre orden ascendente (↑) y descendente (↓).',
             onlyDiscountTip: 'Oculta los juegos que no están en oferta; muestra solo los que tienen descuento.',
             rememberTip: 'Guarda tu orden y filtros y los reaplica al volver a la lista de deseos.',
             copyTip: 'Copia un enlace que reproduce tu orden y filtros actuales al abrirlo.',
-            regionTip: 'Elige a qué país e idioma redirigir las páginas de juego de Xbox. Con "Auto" usa el idioma/región de tu navegador. Se aplica al abrir una página de juego (no aquí).',
+            regionTip: 'Elige el idioma/país (locale) al que redirigir las páginas de Xbox, incluida esta lista de deseos. Con "Auto" no redirige. Pulsa "Aplicar" para guardar y redirigir ahora.',
             aboutTip: 'Ver qué hace este script en su totalidad.',
             aboutTitle: '¿Qué hace este script?',
             aboutBody: [
                 'Este script mejora Xbox Store en dos frentes:',
-                '• Redirección de región: al abrir una página de juego, la lleva al país e idioma que elijas abajo (o al de tu navegador si dejas "Auto"). Así ves precios y textos en tu región.',
+                '• Redirección de región: lleva las páginas de Xbox —incluida tu lista de deseos— al idioma/país (locale) que elijas en el selector. Con "Auto" no redirige.',
                 '• Herramientas en tu lista de deseos:',
                 '– Ordenar: por fecha de agregado, nombre, precio o descuento (ascendente/descendente).',
                 '– Solo con descuento: muestra únicamente los juegos en oferta.',
@@ -64,17 +65,18 @@
             copy: '🔗 Copy link', copied: '✔ Copied', copyPrompt: 'Copy this link:',
             about: 'ℹ️ Learn more', close: 'Close', auto: 'Auto (browser)',
             regionLabel: 'Redirect:', langLabel: 'Language', countryLabel: 'Country',
+            applyLabel: '✔ Apply', applyTip: 'Saves the chosen locale and applies the redirect now (reloads this page, wishlist included, in that language/country). With "Auto" it does not redirect.',
             sortTip: 'Sorts your wishlist by date added, name, price or discount percentage.',
             dirTip: 'Toggles ascending (↑) and descending (↓) order.',
             onlyDiscountTip: 'Hides games that are not on sale; shows only discounted ones.',
             rememberTip: 'Saves your sort and filters and reapplies them when you return to the wishlist.',
             copyTip: 'Copies a link that reproduces your current sort and filters when opened.',
-            regionTip: 'Choose which country and language to redirect Xbox game pages to. With "Auto" it uses your browser language/region. Applied when you open a game page (not here).',
+            regionTip: 'Choose the language/country (locale) to redirect Xbox pages to, including this wishlist. With "Auto" it does not redirect. Click "Apply" to save and redirect now.',
             aboutTip: 'See everything this script does.',
             aboutTitle: 'What does this script do?',
             aboutBody: [
                 'This script improves Xbox Store in two ways:',
-                '• Region redirect: when you open a game page, it takes you to the country and language you choose below (or your browser locale if left on "Auto"). So you see prices and text for your region.',
+                '• Region redirect: takes Xbox pages —including your wishlist— to the language/country (locale) you pick in the selector. With "Auto" it does not redirect.',
                 '• Wishlist tools:',
                 '– Sort: by date added, name, price or discount (ascending/descending).',
                 '– Only discounted: shows only games on sale.',
@@ -86,41 +88,32 @@
     };
     const t = I18N[LANG];
 
-    // Listas curadas para el selector de redirección (idioma + país). El código
-    // vacío ('') significa "Auto (navegador)".
-    const LANGS = [
-        { code: '', es: 'Auto (navegador)', en: 'Auto (browser)' },
-        { code: 'en', es: 'Inglés', en: 'English' },
-        { code: 'es', es: 'Español', en: 'Spanish' },
-        { code: 'pt', es: 'Portugués', en: 'Portuguese' },
-        { code: 'fr', es: 'Francés', en: 'French' },
-        { code: 'de', es: 'Alemán', en: 'German' },
-        { code: 'it', es: 'Italiano', en: 'Italian' },
-        { code: 'ja', es: 'Japonés', en: 'Japanese' },
-        { code: 'ko', es: 'Coreano', en: 'Korean' },
-        { code: 'zh', es: 'Chino', en: 'Chinese' },
-        { code: 'ru', es: 'Ruso', en: 'Russian' },
-        { code: 'pl', es: 'Polaco', en: 'Polish' },
-        { code: 'nl', es: 'Neerlandés', en: 'Dutch' },
-        { code: 'tr', es: 'Turco', en: 'Turkish' },
-    ];
-    const COUNTRIES = [
-        { code: '', es: 'Auto (navegador)', en: 'Auto (browser)' },
-        { code: 'US', es: 'Estados Unidos', en: 'United States' },
-        { code: 'MX', es: 'México', en: 'Mexico' },
-        { code: 'ES', es: 'España', en: 'Spain' },
-        { code: 'AR', es: 'Argentina', en: 'Argentina' },
-        { code: 'CO', es: 'Colombia', en: 'Colombia' },
-        { code: 'CL', es: 'Chile', en: 'Chile' },
-        { code: 'BR', es: 'Brasil', en: 'Brazil' },
-        { code: 'GB', es: 'Reino Unido', en: 'United Kingdom' },
-        { code: 'CA', es: 'Canadá', en: 'Canada' },
-        { code: 'FR', es: 'Francia', en: 'France' },
-        { code: 'DE', es: 'Alemania', en: 'Germany' },
-        { code: 'IT', es: 'Italia', en: 'Italy' },
-        { code: 'JP', es: 'Japón', en: 'Japan' },
-        { code: 'KR', es: 'Corea del Sur', en: 'South Korea' },
-        { code: 'AU', es: 'Australia', en: 'Australia' },
+    // Lista curada de LOCALES válidos (combinación idioma-país). Un solo selector:
+    // así solo se ofrecen combinaciones que Xbox realmente soporta. El código vacío
+    // ('') significa "Auto": no forzar redirección (deja el locale que ya tengas).
+    const LOCALES = [
+        { code: '', es: 'Auto (no redirigir)', en: 'Auto (no redirect)' },
+        { code: 'es-MX', es: 'Español – México (es-MX)', en: 'Spanish – Mexico (es-MX)' },
+        { code: 'es-ES', es: 'Español – España (es-ES)', en: 'Spanish – Spain (es-ES)' },
+        { code: 'es-AR', es: 'Español – Argentina (es-AR)', en: 'Spanish – Argentina (es-AR)' },
+        { code: 'es-CO', es: 'Español – Colombia (es-CO)', en: 'Spanish – Colombia (es-CO)' },
+        { code: 'es-CL', es: 'Español – Chile (es-CL)', en: 'Spanish – Chile (es-CL)' },
+        { code: 'en-US', es: 'Inglés – EE. UU. (en-US)', en: 'English – United States (en-US)' },
+        { code: 'en-GB', es: 'Inglés – Reino Unido (en-GB)', en: 'English – United Kingdom (en-GB)' },
+        { code: 'en-CA', es: 'Inglés – Canadá (en-CA)', en: 'English – Canada (en-CA)' },
+        { code: 'en-AU', es: 'Inglés – Australia (en-AU)', en: 'English – Australia (en-AU)' },
+        { code: 'pt-BR', es: 'Portugués – Brasil (pt-BR)', en: 'Portuguese – Brazil (pt-BR)' },
+        { code: 'fr-FR', es: 'Francés – Francia (fr-FR)', en: 'French – France (fr-FR)' },
+        { code: 'fr-CA', es: 'Francés – Canadá (fr-CA)', en: 'French – Canada (fr-CA)' },
+        { code: 'de-DE', es: 'Alemán – Alemania (de-DE)', en: 'German – Germany (de-DE)' },
+        { code: 'it-IT', es: 'Italiano – Italia (it-IT)', en: 'Italian – Italy (it-IT)' },
+        { code: 'ja-JP', es: 'Japonés – Japón (ja-JP)', en: 'Japanese – Japan (ja-JP)' },
+        { code: 'ko-KR', es: 'Coreano – Corea del Sur (ko-KR)', en: 'Korean – South Korea (ko-KR)' },
+        { code: 'zh-CN', es: 'Chino – China (zh-CN)', en: 'Chinese – China (zh-CN)' },
+        { code: 'ru-RU', es: 'Ruso – Rusia (ru-RU)', en: 'Russian – Russia (ru-RU)' },
+        { code: 'pl-PL', es: 'Polaco – Polonia (pl-PL)', en: 'Polish – Poland (pl-PL)' },
+        { code: 'nl-NL', es: 'Neerlandés – Países Bajos (nl-NL)', en: 'Dutch – Netherlands (nl-NL)' },
+        { code: 'tr-TR', es: 'Turco – Turquía (tr-TR)', en: 'Turkish – Turkey (tr-TR)' },
     ];
 
     // =============================================
@@ -134,51 +127,46 @@
     // el código idéntico al de Microsoft, que sí cruza subdominios).
     const LOCALE_COOKIE = 'xbwl-locale';
 
-    /**
-     * Obtiene el locale del navegador en formato lowercase (ej. "es-mx").
-     * @returns {string} El locale del navegador.
-     */
-    function getBrowserLocale() {
-        const lang = navigator.language || navigator.languages[0] || 'en-us';
-        return lang.toLowerCase();
+    // ¿Es un locale válido de la lista curada? Evita valores viejos/parciales
+    // (p. ej. "en-" guardado por versiones anteriores) que provocaban
+    // redirecciones inválidas en bucle.
+    function isValidLocale(code) {
+        return !!code && LOCALES.some((l) => l.code && l.code.toLowerCase() === code.toLowerCase());
     }
-
-    // Lee la preferencia guardada como { lang, country } (vacíos = Auto).
+    // Lee el locale guardado (ej. "es-MX"); '' = Auto (no redirigir). Sanea
+    // valores inválidos borrándolos, para no entrar en bucles de redirección.
     function readLocalePref() {
         try {
             const m = document.cookie.match(new RegExp('(?:^|;\\s*)' + LOCALE_COOKIE + '=([^;]+)'));
             const v = m ? decodeURIComponent(m[1]) : '';
-            const parts = v.split('-');
-            return { lang: (parts[0] || '').toLowerCase(), country: (parts[1] || '').toUpperCase() };
-        } catch (e) { return { lang: '', country: '' }; }
+            if (v && !isValidLocale(v)) { saveLocalePref(''); return ''; }
+            return v;
+        } catch (e) { return ''; }
     }
-    // Guarda la preferencia (vacía si algún campo es Auto). Cookie a 1 año.
-    function saveLocalePref(lang, country) {
-        const val = (lang && country) ? `${lang}-${country}` : '';
+    // Guarda el locale elegido ('' = Auto). Cookie a 1 año.
+    function saveLocalePref(code) {
         try {
-            document.cookie = `${LOCALE_COOKIE}=${encodeURIComponent(val)}; domain=.xbox.com; path=/; max-age=${60 * 60 * 24 * 365}`;
+            document.cookie = `${LOCALE_COOKIE}=${encodeURIComponent(code || '')}; domain=.xbox.com; path=/; max-age=${60 * 60 * 24 * 365}`;
         } catch (e) { console.error('(xbwl): saveLocalePref error:', e); }
     }
 
-    // Locale destino (lowercase xx-yy): preferencia si está completa, si no navegador.
-    function desiredLocale() {
-        const p = readLocalePref();
-        if (p.lang && p.country) return `${p.lang}-${p.country}`.toLowerCase();
-        return getBrowserLocale();
-    }
+    // Locale destino (formato xx-YY) o '' si Auto/sin preferencia.
+    function desiredLocale() { return readLocalePref(); }
 
     /**
-     * Si el locale en la URL difiere del destino (preferencia o navegador),
-     * reemplaza el segmento y redirige con location.replace() (sin historial).
+     * Si hay preferencia explícita y el locale de la URL difiere, reemplaza el
+     * segmento y redirige (sin historial). Con Auto ('') no fuerza nada. Aplica
+     * en cualquier página con segmento de locale, incluida la lista de deseos.
+     * Comparación insensible a mayúsculas para no redirigir en bucle.
      */
     function redirectIfNeeded() {
+        const target = desiredLocale();
+        if (!isValidLocale(target)) return;
+
         const currentUrl = window.location.href;
         const match = currentUrl.match(LOCALE_PATH_REGEX);
         if (!match) return;
-
-        const currentLocale = match[1].toLowerCase();
-        const target = desiredLocale();
-        if (currentLocale === target) return;
+        if (match[1].toLowerCase() === target.toLowerCase()) return;
 
         const newUrl = currentUrl.replace(LOCALE_PATH_REGEX, `/${target}/`);
         if (currentUrl !== newUrl) window.location.replace(newUrl);
@@ -200,7 +188,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.3.1'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.3.2'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -345,6 +333,7 @@
             #${TOOLBAR_ID} .xbwl-dir { min-width: 2.2em; text-align: center; font-weight: 600; }
             #${TOOLBAR_ID} .xbwl-share { background: #107c10; color: #fff; border: none; }
             #${TOOLBAR_ID} .xbwl-region { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+            #${TOOLBAR_ID} .xbwl-apply { background: #107c10; color: #fff; border: none; font-weight: 600; }
         `;
         (document.head || document.documentElement).appendChild(style);
     }
@@ -423,13 +412,14 @@
         }, 10);
     }
 
-    // Construye un <select> a partir de una lista curada [{code,es,en}].
-    function buildLocaleSelect(list, current) {
+    // Construye el <select> único de locales a partir de LOCALES. El label de cada
+    // opción ya explica la combinación (idioma – país + código).
+    function buildLocaleSelect(current) {
         const sel = document.createElement('select');
-        list.forEach((it) => {
+        LOCALES.forEach((it) => {
             const o = document.createElement('option');
             o.value = it.code;
-            o.textContent = it.code ? `${it[LANG]} (${it.code})` : it[LANG];
+            o.textContent = it[LANG];
             if (it.code.toLowerCase() === (current || '').toLowerCase()) o.selected = true;
             sel.appendChild(o);
         });
@@ -504,38 +494,43 @@
             } catch (e) { window.prompt(t.copyPrompt, url); }
         });
 
-        // Selector de redirección (idioma + país), guardado en cookie de .xbox.com.
-        // Cada select lleva su propia etiqueta visible ("Idioma" / "País") para que
-        // se distinga cuál es cuál (ambos muestran "Auto (navegador)" por defecto).
-        const pref = readLocalePref();
+        // Selector único de redirección (locale = idioma-país), guardado en cookie
+        // de .xbox.com. Cada opción explica la combinación en su label.
+        const localeSel = buildLocaleSelect(readLocalePref());
         const regionText = document.createElement('span');
         regionText.textContent = t.regionLabel;
         regionText.title = t.regionTip;
         regionText.style.fontWeight = '600';
 
-        const langSel = buildLocaleSelect(LANGS, pref.lang);
-        const langWrap = document.createElement('label');
-        langWrap.title = t.regionTip;
-        langWrap.appendChild(document.createTextNode(t.langLabel));
-        langWrap.appendChild(langSel);
+        const localeWrap = document.createElement('label');
+        localeWrap.title = t.regionTip;
+        localeWrap.appendChild(localeSel);
 
-        const countrySel = buildLocaleSelect(COUNTRIES, pref.country);
-        const countryWrap = document.createElement('label');
-        countryWrap.title = t.regionTip;
-        countryWrap.appendChild(document.createTextNode(t.countryLabel));
-        countryWrap.appendChild(countrySel);
+        // Botón "Aplicar": guarda el locale elegido y redirige la página actual
+        // (incluida la lista de deseos) al instante. Con "Auto" solo recarga.
+        const applyBtn = document.createElement('button');
+        applyBtn.type = 'button';
+        applyBtn.className = 'xbwl-apply';
+        applyBtn.textContent = t.applyLabel;
+        applyBtn.title = t.applyTip;
+        applyBtn.addEventListener('click', () => {
+            const target = localeSel.value;
+            saveLocalePref(target);
+            const cur = window.location.href;
+            const m = cur.match(LOCALE_PATH_REGEX);
+            if (target && m && m[1].toLowerCase() !== target.toLowerCase()) {
+                window.location.assign(cur.replace(LOCALE_PATH_REGEX, `/${target}/`));
+            } else {
+                window.location.reload();
+            }
+        });
 
-        const onRegionChange = () => saveLocalePref(langSel.value, countrySel.value);
-        langSel.addEventListener('change', onRegionChange);
-        countrySel.addEventListener('change', onRegionChange);
-
-        // Grupo de región: "Redirección: Idioma [..] País [..]" viaja junto y
-        // se envuelve como un solo bloque.
+        // Grupo de región: "Redirección: [locale ▾] [Aplicar]" viaja junto.
         const regionGroup = document.createElement('span');
         regionGroup.className = 'xbwl-region';
         regionGroup.appendChild(regionText);
-        regionGroup.appendChild(langWrap);
-        regionGroup.appendChild(countryWrap);
+        regionGroup.appendChild(localeWrap);
+        regionGroup.appendChild(applyBtn);
 
         // Botón "Saber más"
         const aboutBtn = document.createElement('button');
@@ -610,10 +605,12 @@
     // INICIALIZACIÓN (por ruta)
     // =============================================
     // xbox.com es una SPA: si se navega a /wishlist sin recargar, se reintenta.
+    // La redirección se evalúa SIEMPRE (también en la lista de deseos); si ya
+    // estamos en el locale correcto no hace nada y se cargan las herramientas.
     function route() {
         try {
+            redirectIfNeeded();
             if (isWishlist()) initWishlist();
-            else redirectIfNeeded();
         } catch (e) { console.error('(xbox-store-locale-redirect): Error:', e); }
     }
 
