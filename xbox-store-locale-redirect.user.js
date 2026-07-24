@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.3.0
+// @version      2.3.1
 // @description  Redirige las páginas de Xbox Store al idioma/región elegido (o del navegador), y en la lista de deseos (/wishlist) agrega ordenar y filtrar (por agregado, nombre, precio y descuento; filtro "solo con descuento") con recuerdo de la elección, URL compartible, selector de país/idioma de redirección y botón "Saber más".
 // @author       g31w0fw0rld
 // @license      MIT
@@ -200,7 +200,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.3.0'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.3.1'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
