@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.3.2
-// @description  Redirige las páginas de Xbox Store al idioma/región elegido (o del navegador), y en la lista de deseos (/wishlist) agrega ordenar y filtrar (por agregado, nombre, precio y descuento; filtro "solo con descuento") con recuerdo de la elección, URL compartible, selector de país/idioma de redirección y botón "Saber más".
+// @version      2.3.3
+// @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, redirecting without adding history entries, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel.
 // @author       g31w0fw0rld
 // @license      MIT
 // @match        https://www.xbox.com/*/games/store/*
@@ -35,10 +35,10 @@
     const I18N = {
         es: {
             sortLabel: 'Ordenar:', added: 'Agregado', name: 'Nombre', price: 'Precio', discount: 'Descuento',
-            dirTitle: 'Ascendente / Descendente', onlyDiscount: 'Solo con descuento', remember: 'Recordar',
+onlyDiscount: 'Solo con descuento', remember: 'Recordar',
             copy: '🔗 Copiar enlace', copied: '✔ Copiado', copyPrompt: 'Copia este enlace:',
-            about: 'ℹ️ Saber más', close: 'Cerrar', auto: 'Auto (navegador)',
-            regionLabel: 'Redirección:', langLabel: 'Idioma', countryLabel: 'País',
+            about: 'ℹ️ Saber más', close: 'Cerrar',
+            regionLabel: 'Redirección:',
             applyLabel: '✔ Aplicar', applyTip: 'Guarda el locale elegido y aplica la redirección ahora (recarga esta página, incluida la lista de deseos, en ese idioma/país). Con "Auto" no redirige.',
             sortTip: 'Ordena tu lista de deseos por fecha de agregado, nombre, precio o porcentaje de descuento.',
             dirTip: 'Alterna entre orden ascendente (↑) y descendente (↓).',
@@ -51,20 +51,25 @@
             aboutBody: [
                 'Este script mejora Xbox Store en dos frentes:',
                 '• Redirección de región: lleva las páginas de Xbox —incluida tu lista de deseos— al idioma/país (locale) que elijas en el selector. Con "Auto" no redirige.',
+                '– El selector ofrece 21 locales curados, solo combinaciones que la tienda soporta de verdad.',
+                '– En xbox.com el locale es un segmento de la ruta (/es-mx/), así que el script reescribe esa parte de la URL.',
+                '– Usa un reemplazo en vez de una navegación nueva, así que no deja entrada extra en el historial y el botón Atrás se comporta con normalidad.',
+                '– Un locale guardado inválido se borra en vez de usarse, para no entrar en bucles de redirección.',
+                '– "Aplicar" guarda tu elección y redirige al momento, lista de deseos incluida.',
                 '• Herramientas en tu lista de deseos:',
-                '– Ordenar: por fecha de agregado, nombre, precio o descuento (ascendente/descendente).',
+                '– Ordenar: por fecha de agregado, nombre, precio o descuento, con un botón ↑/↓ para ascendente o descendente.',
                 '– Solo con descuento: muestra únicamente los juegos en oferta.',
                 '– Recordar: guarda tu orden y filtros y los reaplica al volver.',
-                '– Copiar enlace: genera una URL que reproduce tu orden y filtros.',
-                'La preferencia de país/idioma se guarda en una cookie de xbox.com; el resto en localStorage. No se envían datos a ningún servidor.',
-            ],
+                '– Copiar enlace: genera una URL que reproduce tu orden y filtros. Si el navegador bloquea el portapapeles, la muestra en un diálogo para copiarla a mano.',
+                'La preferencia de país/idioma se guarda en una cookie de xbox.com, para que valga en toda la tienda y no solo en la pestaña actual; el resto va en localStorage. No se envían datos a ningún servidor.'
+            ]
         },
         en: {
             sortLabel: 'Sort:', added: 'Added', name: 'Name', price: 'Price', discount: 'Discount',
-            dirTitle: 'Ascending / Descending', onlyDiscount: 'Only discounted', remember: 'Remember',
+onlyDiscount: 'Only discounted', remember: 'Remember',
             copy: '🔗 Copy link', copied: '✔ Copied', copyPrompt: 'Copy this link:',
-            about: 'ℹ️ Learn more', close: 'Close', auto: 'Auto (browser)',
-            regionLabel: 'Redirect:', langLabel: 'Language', countryLabel: 'Country',
+            about: 'ℹ️ Learn more', close: 'Close',
+            regionLabel: 'Redirect:',
             applyLabel: '✔ Apply', applyTip: 'Saves the chosen locale and applies the redirect now (reloads this page, wishlist included, in that language/country). With "Auto" it does not redirect.',
             sortTip: 'Sorts your wishlist by date added, name, price or discount percentage.',
             dirTip: 'Toggles ascending (↑) and descending (↓) order.',
@@ -77,14 +82,19 @@
             aboutBody: [
                 'This script improves Xbox Store in two ways:',
                 '• Region redirect: takes Xbox pages —including your wishlist— to the language/country (locale) you pick in the selector. With "Auto" it does not redirect.',
+                '– The selector offers 21 curated locales, only combinations the store actually supports.',
+                '– On xbox.com the locale is a path segment (/en-us/), so the script rewrites that part of the URL.',
+                '– It uses a replace rather than a new navigation, so it leaves no extra history entry and the Back button behaves normally.',
+                '– An invalid saved locale is cleared instead of used, so a bad value cannot cause a redirect loop.',
+                '– "Apply" saves your choice and redirects right away, wishlist included.',
                 '• Wishlist tools:',
-                '– Sort: by date added, name, price or discount (ascending/descending).',
+                '– Sort: by date added, name, price or discount, with an ↑/↓ button for ascending or descending.',
                 '– Only discounted: shows only games on sale.',
                 '– Remember: saves your sort and filters and reapplies them on return.',
-                '– Copy link: builds a URL that reproduces your sort and filters.',
-                'The country/language preference is stored in an xbox.com cookie; the rest in localStorage. No data is sent to any server.',
-            ],
-        },
+                '– Copy link: builds a URL that reproduces your sort and filters. If the browser blocks clipboard access, it shows the URL in a dialog so you can copy it by hand.',
+                'The country/language preference is stored in an xbox.com cookie, so it holds across the whole store and not just the current tab; the rest goes in localStorage. No data is sent to any server.'
+            ]
+        }
     };
     const t = I18N[LANG];
 
@@ -113,7 +123,7 @@
         { code: 'ru-RU', es: 'Ruso – Rusia (ru-RU)', en: 'Russian – Russia (ru-RU)' },
         { code: 'pl-PL', es: 'Polaco – Polonia (pl-PL)', en: 'Polish – Poland (pl-PL)' },
         { code: 'nl-NL', es: 'Neerlandés – Países Bajos (nl-NL)', en: 'Dutch – Netherlands (nl-NL)' },
-        { code: 'tr-TR', es: 'Turco – Turquía (tr-TR)', en: 'Turkish – Turkey (tr-TR)' },
+        { code: 'tr-TR', es: 'Turco – Turquía (tr-TR)', en: 'Turkish – Turkey (tr-TR)' }
     ];
 
     // =============================================
@@ -188,7 +198,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.3.2'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.3.3'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -209,7 +219,7 @@
                     sort: SORTS.includes(parsed.sort) ? parsed.sort : 'added',
                     dir: parsed.dir === 'desc' ? 'desc' : 'asc',
                     onlyDiscount: !!parsed.onlyDiscount,
-                    remember: parsed.remember !== false,
+                    remember: parsed.remember !== false
                 });
             }
         } catch (e) { console.error('(xbwl): loadSettings error:', e); }
@@ -228,7 +238,7 @@
         return {
             sort: SORTS.includes(p.get('wlsort')) ? p.get('wlsort') : 'added',
             dir: p.get('wldir') === 'desc' ? 'desc' : 'asc',
-            onlyDiscount: p.get('wldisc') === '1',
+            onlyDiscount: p.get('wldisc') === '1'
         };
     }
     function buildShareUrl() {
@@ -243,7 +253,7 @@
     // --- Extracción -------------------------------------------------------------
     function parsePrice(txt) {
         if (!txt) return null;
-        const m = txt.replace(/\s/g, '').match(/[\d.,]+/);
+        const m = txt.replace(/\s/g, '').match(/[\d.]+/);
         if (!m) return null;
         let s = m[0];
         const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
@@ -347,7 +357,7 @@
             position: 'fixed', inset: '0', width: '100%', height: '100%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: 'rgba(0,0,0,0.6)', zIndex: '2147483647',
-            transition: 'opacity 180ms ease', opacity: '0',
+            transition: 'opacity 180ms ease', opacity: '0'
         });
         const box = document.createElement('div');
         Object.assign(box.style, {
@@ -357,7 +367,7 @@
             boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: '1px solid #107c10',
             fontFamily: 'Segoe UI, system-ui, sans-serif', fontSize: '14px', lineHeight: '1.5',
             transform: 'translateY(8px) scale(0.98)', opacity: '0',
-            transition: 'transform 180ms ease, opacity 180ms ease',
+            transition: 'transform 180ms ease, opacity 180ms ease'
         });
         const title = document.createElement('div');
         title.textContent = t.aboutTitle;
