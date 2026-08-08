@@ -15,9 +15,10 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 ### What it does
 
 **Region redirect**
-- Sends Xbox Store pages — game pages and your wishlist alike — to the **language and country you choose**, so you see prices and text for that region instead of the one Xbox picks for you.
+- Sends Xbox Store pages to the **language and country you choose**, so you see prices and text for that region instead of the one Xbox picks for you.
+- It applies **across the whole store** — catalog, searches, game pages, your wishlist — not only where the script draws something. You pick the locale once, in the wishlist toolbar, and the rest of the store follows.
 - The selector offers **21 curated locales** (language + country together), so you can only choose combinations the store actually supports. `Auto` means "do not redirect" and leaves the store's own behaviour alone.
-- On xbox.com the locale is a **path segment**, so the script rewrites that part of the URL — `/en-us/` becomes whatever you picked.
+- On xbox.com the locale is the **first path segment**, so the script rewrites that part of the URL — `/en-us/` becomes whatever you picked — and leaves the rest, query parameters included, untouched.
 - The redirect uses a **replace, not a new navigation**, so it leaves no extra history entry and the Back button behaves normally instead of bouncing you forward again.
 - A stale or malformed saved locale is **detected and cleared** rather than used, which is what stops a bad value from redirecting in a loop.
 - The choice is kept in a **cookie on `.xbox.com`**, so it holds across the whole store rather than just the tab you set it in.
@@ -47,16 +48,17 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 1. Install [Tampermonkey](https://www.tampermonkey.net/).
 2. Open the installer: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (also on [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) and [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
 
-**Sites:** `xbox.com/…/games/store/*`, `xbox.com/…/wishlist`
+**Sites:** all of `www.xbox.com`. The **redirect** applies store-wide; the **interface** — wishlist tools, game-page buttons — is only built on `xbox.com/…/wishlist` and `xbox.com/…/games/store/*`, and no other page is drawn on. Loading everywhere is also what makes the buttons appear without a reload: Xbox changes page without reloading, and a script injected only on those two pages never gets to run when you reach a game page from, say, `/games/browse`.
 
 ## Español
 
 ### Qué hace
 
 **Redirección de región**
-- Lleva las páginas de Xbox Store —tanto las fichas de juego como tu lista de deseos— al **idioma y país que elijas**, para ver precios y textos de esa región en vez de la que Xbox decide por ti.
+- Lleva las páginas de Xbox Store al **idioma y país que elijas**, para ver precios y textos de esa región en vez de la que Xbox decide por ti.
+- Se aplica **en toda la tienda** —catálogo, búsquedas, fichas de juego, lista de deseos—, no solo donde el script pinta algo. Eliges el locale una vez, en la barra de la lista de deseos, y el resto de la tienda va detrás.
 - El selector ofrece **21 locales curados** (idioma y país juntos), así que solo puedes elegir combinaciones que la tienda realmente soporta. `Auto` significa "no redirigir" y deja el comportamiento propio de la tienda.
-- En xbox.com el locale es un **segmento de la ruta**, así que el script reescribe esa parte de la URL: el `/es-mx/` pasa a ser el que hayas elegido.
+- En xbox.com el locale es el **primer segmento de la ruta**, así que el script reescribe esa parte de la URL —el `/es-mx/` pasa a ser el que hayas elegido— y deja el resto, parámetros incluidos, tal cual.
 - La redirección usa un **reemplazo, no una navegación nueva**, así que no deja una entrada extra en el historial y el botón Atrás se comporta con normalidad en vez de devolverte hacia delante.
 - Un locale guardado obsoleto o mal formado se **detecta y se borra** en vez de usarse, que es lo que evita que un valor malo redirija en bucle.
 - La elección se guarda en una **cookie de `.xbox.com`**, así que vale para toda la tienda y no solo para la pestaña donde la pusiste.
@@ -86,7 +88,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 1. Instala [Tampermonkey](https://www.tampermonkey.net/).
 2. Abre el instalador: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (también en [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) y [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
 
-**Sitios:** `xbox.com/…/games/store/*`, `xbox.com/…/wishlist`
+**Sitios:** todo `www.xbox.com`. La **redirección** se aplica en toda la tienda; la **interfaz** —herramientas de la lista de deseos, botones de la ficha— solo se monta en `xbox.com/…/wishlist` y `xbox.com/…/games/store/*`, y en ninguna otra página se pinta nada. Cargar en todas es además lo que hace que los botones salgan sin recargar: Xbox cambia de página sin recargar, y un script inyectado solo en esas dos páginas nunca llega a correr cuando entras a una ficha desde, por ejemplo, `/games/browse`.
 
 ## Privacy / Privacidad
 

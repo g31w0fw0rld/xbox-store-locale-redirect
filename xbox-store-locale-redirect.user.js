@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.4.0
+// @version      2.4.1
 // @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On PC-playable games it adds GG.deals and PCGamingWiki buttons that search by the English name.
 // @author       g31w0fw0rld
 // @license      MIT
-// @match        https://www.xbox.com/*/games/store/*
-// @match        https://www.xbox.com/*/wishlist*
+// @match        https://www.xbox.com/*
 // @downloadURL  https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js
 // @updateURL    https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js
 // @grant        none
@@ -18,8 +17,19 @@
     // =============================================
     // DETECCIÓN DE RUTA
     // =============================================
+    // El @match cubre TODO www.xbox.com. La redirección de locale se aplica en
+    // toda la tienda; la interfaz, solo en la lista de deseos y en las fichas
+    // (juegos, ediciones, DLC…). Ver route().
+    // Cargar en toda la tienda además es lo que hace que los botones aparezcan sin
+    // recargar: el gestor de userscripts inyecta solo al cargar el documento, y
+    // xbox.com es una SPA, así que llegando a una ficha desde una página no
+    // cubierta (p. ej. /games/browse) no había carga que disparara la inyección.
+    // Con el script ya dentro, el hook de history de watchSpaNav() está puesto
+    // cuando ocurre esa navegación y la ficha se atiende al vuelo.
     const WISHLIST_PATH_REGEX = /\/wishlist(?:\/|$)/i;
+    const STORE_PATH_REGEX = /\/games\/store\//i;
     function isWishlist() { return WISHLIST_PATH_REGEX.test(location.pathname); }
+    function isProductPage() { return STORE_PATH_REGEX.test(location.pathname); }
 
     // =============================================
     // IDIOMA (auto-detect: si la página/navegador está en español -> es, si no -> en)
@@ -39,20 +49,21 @@ onlyDiscount: 'Solo con descuento', remember: 'Recordar',
             copy: '🔗 Copiar enlace', copied: '✔ Copiado', copyPrompt: 'Copia este enlace:',
             about: 'ℹ️ Saber más', close: 'Cerrar',
             regionLabel: 'Redirección:',
-            applyLabel: '✔ Aplicar', applyTip: 'Guarda el locale elegido y aplica la redirección ahora (recarga esta página, incluida la lista de deseos, en ese idioma/país). Con "Auto" no redirige.',
+            applyLabel: '✔ Aplicar', applyTip: 'Guarda el locale elegido y aplica la redirección ahora (recarga esta página en ese idioma/país). A partir de ahí vale para toda la tienda. Con "Auto" no redirige.',
             sortTip: 'Ordena tu lista de deseos por fecha de agregado, nombre, precio o porcentaje de descuento.',
             dirTip: 'Alterna entre orden ascendente (↑) y descendente (↓).',
             onlyDiscountTip: 'Oculta los juegos que no están en oferta; muestra solo los que tienen descuento.',
             rememberTip: 'Guarda tu orden y filtros y los reaplica al volver a la lista de deseos.',
             copyTip: 'Copia un enlace que reproduce tu orden y filtros actuales al abrirlo.',
-            regionTip: 'Elige el idioma/país (locale) al que redirigir las páginas de Xbox, incluida esta lista de deseos. Con "Auto" no redirige. Pulsa "Aplicar" para guardar y redirigir ahora.',
+            regionTip: 'Elige el idioma/país (locale) al que redirigir las páginas de Xbox: vale para toda la tienda —catálogo, búsquedas, fichas y esta lista de deseos—. Con "Auto" no redirige. Pulsa "Aplicar" para guardar y redirigir ahora.',
             aboutTip: 'Ver qué hace este script en su totalidad.',
             aboutTitle: '¿Qué hace este script?',
             aboutBody: [
                 'Este script mejora Xbox Store en dos frentes:',
-                '• Redirección de región: lleva las páginas de Xbox —incluida tu lista de deseos— al idioma/país (locale) que elijas en el selector. Con "Auto" no redirige.',
+                '• Redirección de región: lleva las páginas de Xbox al idioma/país (locale) que elijas en el selector. Con "Auto" no redirige.',
+                '– Vale en toda la tienda: catálogo, búsquedas, fichas de juego y tu lista de deseos. Basta con elegirlo una vez.',
                 '– El selector ofrece 21 locales curados, solo combinaciones que la tienda soporta de verdad.',
-                '– En xbox.com el locale es un segmento de la ruta (/es-mx/), así que el script reescribe esa parte de la URL.',
+                '– En xbox.com el locale es el primer segmento de la ruta (/es-mx/), así que el script reescribe esa parte de la URL y deja el resto —incluidos los parámetros— tal cual.',
                 '– Usa un reemplazo en vez de una navegación nueva, así que no deja entrada extra en el historial y el botón Atrás se comporta con normalidad.',
                 '– Un locale guardado inválido se borra en vez de usarse, para no entrar en bucles de redirección.',
                 '– "Aplicar" guarda tu elección y redirige al momento, lista de deseos incluida.',
@@ -67,6 +78,7 @@ onlyDiscount: 'Solo con descuento', remember: 'Recordar',
                 '– La plataforma se lee de la propia ficha, de la lista "Jugar con", que Xbox no traduce.',
                 '– El nombre se pide al catálogo público de Microsoft y se guarda en localStorage para no repetir la consulta. Hace falta porque se busca por el nombre en inglés, no por el título que ves: la ficha va traducida, hasta la URL, y las dos webs están indexadas en inglés. Si el catálogo no responde, no se ponen los botones.',
                 '– Al saltar de una ficha a otra sin recargar, lo que hay en pantalla tarda un momento en cambiar; hasta que el juego pintado coincide con el de la dirección no se pone nada, para no mezclar la plataforma de un juego con el nombre de otro.',
+                '– El script se carga en toda la tienda para enterarse de esos saltos vengan de donde vengan (del catálogo, de una búsqueda), porque Xbox cambia de página sin recargar y así los botones salen sin tener que recargar tú. Fuera de las fichas y de la lista de deseos no pinta nada: lo único que hace en el resto de la tienda es la redirección de región.',
                 '– GG.deals se abre ya filtrado por el DRM de Microsoft Store, igual que los scripts de Steam, GOG y Epic hacen con el suyo, y sin el mínimo de valoración que trae por defecto y que esconde parte de las ofertas.',
                 '– Al nombre se le quita el "(PC)" que Microsoft cuelga cuando el mismo juego tiene ficha de PC y de consola, porque no es parte del título y ninguna de las dos webs lo lleva.',
                 '– GG.deals recibe el título completo, con su edición (y sin acentos, porque translitera su índice); PCGamingWiki lo recibe sin sufijos de empaquetado (Standard, Deluxe, Premium…), porque documenta el juego base. Los que sí son lanzamientos aparte (Definitive, Anniversary, Special, Remastered) se dejan tal cual.',
@@ -79,20 +91,21 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
             copy: '🔗 Copy link', copied: '✔ Copied', copyPrompt: 'Copy this link:',
             about: 'ℹ️ Learn more', close: 'Close',
             regionLabel: 'Redirect:',
-            applyLabel: '✔ Apply', applyTip: 'Saves the chosen locale and applies the redirect now (reloads this page, wishlist included, in that language/country). With "Auto" it does not redirect.',
+            applyLabel: '✔ Apply', applyTip: 'Saves the chosen locale and applies the redirect now (reloads this page in that language/country). From then on it holds across the whole store. With "Auto" it does not redirect.',
             sortTip: 'Sorts your wishlist by date added, name, price or discount percentage.',
             dirTip: 'Toggles ascending (↑) and descending (↓) order.',
             onlyDiscountTip: 'Hides games that are not on sale; shows only discounted ones.',
             rememberTip: 'Saves your sort and filters and reapplies them when you return to the wishlist.',
             copyTip: 'Copies a link that reproduces your current sort and filters when opened.',
-            regionTip: 'Choose the language/country (locale) to redirect Xbox pages to, including this wishlist. With "Auto" it does not redirect. Click "Apply" to save and redirect now.',
+            regionTip: 'Choose the language/country (locale) to redirect Xbox pages to: it holds across the whole store —catalog, searches, game pages and this wishlist—. With "Auto" it does not redirect. Click "Apply" to save and redirect now.',
             aboutTip: 'See everything this script does.',
             aboutTitle: 'What does this script do?',
             aboutBody: [
                 'This script improves Xbox Store in two ways:',
-                '• Region redirect: takes Xbox pages —including your wishlist— to the language/country (locale) you pick in the selector. With "Auto" it does not redirect.',
+                '• Region redirect: takes Xbox pages to the language/country (locale) you pick in the selector. With "Auto" it does not redirect.',
+                '– It holds across the whole store: catalog, searches, game pages and your wishlist. You only pick it once.',
                 '– The selector offers 21 curated locales, only combinations the store actually supports.',
-                '– On xbox.com the locale is a path segment (/en-us/), so the script rewrites that part of the URL.',
+                '– On xbox.com the locale is the first path segment (/en-us/), so the script rewrites that part of the URL and leaves the rest —query parameters included— untouched.',
                 '– It uses a replace rather than a new navigation, so it leaves no extra history entry and the Back button behaves normally.',
                 '– An invalid saved locale is cleared instead of used, so a bad value cannot cause a redirect loop.',
                 '– "Apply" saves your choice and redirects right away, wishlist included.',
@@ -107,6 +120,7 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
                 '– The platform is read from the page itself, from the "Play with" list, which Xbox does not translate.',
                 '– The name is requested from Microsoft\'s public catalog and kept in localStorage to avoid repeating the call. It is needed because the search uses the English name, not the title you see: the page is translated, the URL included, and both sites are indexed in English. If the catalog does not answer, no buttons are added.',
                 '– When you jump between pages without reloading, what is on screen takes a moment to change; nothing is added until the game on screen matches the one in the address, so one game\'s platform is never paired with another\'s name.',
+                '– The script loads across the whole store so it catches those jumps wherever they come from (the catalog, a search), because Xbox changes page without reloading and this way the buttons show up with no reload needed. Outside game pages and the wishlist it draws nothing: the only thing it does elsewhere in the store is the region redirect.',
                 '– GG.deals opens already filtered to the Microsoft Store DRM, the same way the Steam, GOG and Epic scripts do with theirs, and without the default minimum store rating that hides part of the deals.',
                 '– The "(PC)" that Microsoft hangs on the name when the same game has both a PC and a console page is dropped, since it is not part of the title and neither destination carries it.',
                 '– GG.deals gets the full title, edition included (and without accents, since it transliterates its index); PCGamingWiki gets it without packaging suffixes (Standard, Deluxe, Premium…), because it documents the base game. The ones that are genuinely separate releases (Definitive, Anniversary, Special, Remastered) are left alone.',
@@ -145,11 +159,20 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     ];
 
     // =============================================
-    // LOCALE REDIRECT (solo en páginas de producto de la tienda)
+    // LOCALE REDIRECT (en toda la tienda)
     // =============================================
 
-    // Patrón para detectar el segmento de locale en la ruta (ej. /en-us/, /pt-br/).
-    const LOCALE_PATH_REGEX = /\/([a-z]{2}-[a-z]{2})\//i;
+    // Patrón del segmento de locale (ej. /en-us/, /pt-br/). Anclado al PRIMER
+    // segmento de la ruta, que es donde xbox.com lo pone siempre: al aplicarse la
+    // redirección en toda la tienda ya no basta con buscarlo en cualquier sitio de
+    // la URL, porque una búsqueda o un parámetro con esa forma (?ref=/en-us/) daría
+    // un falso positivo y reescribiría lo que no es.
+    const LOCALE_PATH_REGEX = /^\/([a-z]{2}-[a-z]{2})(?=\/|$)/i;
+    // Ruta actual con el locale cambiado, conservando query y ancla.
+    function urlWithLocale(target) {
+        return location.origin + location.pathname.replace(LOCALE_PATH_REGEX, `/${target}`)
+            + location.search + location.hash;
+    }
     // Preferencia de país/idioma. Cookie con domain=.xbox.com para que se comparta
     // entre las páginas de juego y el wishlist (mismo host, pero la cookie mantiene
     // el código idéntico al de Microsoft, que sí cruza subdominios).
@@ -184,20 +207,22 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     /**
      * Si hay preferencia explícita y el locale de la URL difiere, reemplaza el
      * segmento y redirige (sin historial). Con Auto ('') no fuerza nada. Aplica
-     * en cualquier página con segmento de locale, incluida la lista de deseos.
+     * en CUALQUIER página de la tienda con segmento de locale —catálogo,
+     * búsquedas, lista de deseos, fichas—, no solo donde el script pinta algo:
+     * es una preferencia de navegación, y limitarla a dos páginas dejaba el resto
+     * de la tienda en el idioma que decidiera Xbox.
      * Comparación insensible a mayúsculas para no redirigir en bucle.
      */
     function redirectIfNeeded() {
         const target = desiredLocale();
         if (!isValidLocale(target)) return;
 
-        const currentUrl = window.location.href;
-        const match = currentUrl.match(LOCALE_PATH_REGEX);
+        const match = location.pathname.match(LOCALE_PATH_REGEX);
         if (!match) return;
         if (match[1].toLowerCase() === target.toLowerCase()) return;
 
-        const newUrl = currentUrl.replace(LOCALE_PATH_REGEX, `/${target}/`);
-        if (currentUrl !== newUrl) window.location.replace(newUrl);
+        const newUrl = urlWithLocale(target);
+        if (location.href !== newUrl) window.location.replace(newUrl);
     }
 
     // =============================================
@@ -216,12 +241,17 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.4.0'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.4.1'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
 
     let settings = loadSettings();
+    // Contador de navegación de la lista de deseos, gemelo del de las fichas: al
+    // cargarse en toda la tienda, entrar y salir del wishlist varias veces deja
+    // esperas de hasta 25 s solapadas, y sin token la vieja terminaría pintando
+    // sobre la página nueva.
+    let wishlistNav = 0;
     let applying = false;          // silencia el observer al reordenar
     let listObserver = null;
     let observerDebounce = null;
@@ -544,10 +574,9 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
         applyBtn.addEventListener('click', () => {
             const target = localeSel.value;
             saveLocalePref(target);
-            const cur = window.location.href;
-            const m = cur.match(LOCALE_PATH_REGEX);
+            const m = location.pathname.match(LOCALE_PATH_REGEX);
             if (target && m && m[1].toLowerCase() !== target.toLowerCase()) {
-                window.location.assign(cur.replace(LOCALE_PATH_REGEX, `/${target}/`));
+                window.location.assign(urlWithLocale(target));
             } else {
                 window.location.reload();
             }
@@ -613,8 +642,9 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     }
 
     async function initWishlist() {
+        const token = ++wishlistNav;
         const ok = await waitForItems(25000);
-        if (!ok) return;
+        if (!ok || token !== wishlistNav || !isWishlist()) return;
 
         const fromUrl = readUrlView();
         if (fromUrl) {
@@ -937,6 +967,17 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
         anchor.after(buildProductLinks(linksState.id, linksState.title, anchor));
     }
 
+    // Al salir de una ficha (a la lista de deseos, a /games/browse, al home) se
+    // olvida el producto validado y se retiran los botones. Hace falta porque el
+    // observer sigue vivo el resto de la sesión: sin esto repondría los botones de
+    // un juego en una página que ya no es la suya, y una pasada en vuelo
+    // (esperando plataforma o catálogo) los pintaría al terminar.
+    function forgetProductLinks() {
+        productNav++;
+        linksState = null;
+        document.getElementById(LINKS_ID)?.remove();
+    }
+
     function startLinksObserver() {
         if (linksObserver) return;
         linksObserver = new MutationObserver(() => {
@@ -1001,14 +1042,21 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     // =============================================
     // INICIALIZACIÓN (por ruta)
     // =============================================
-    // xbox.com es una SPA: si se navega a /wishlist sin recargar, se reintenta.
-    // La redirección se evalúa SIEMPRE (también en la lista de deseos); si ya
-    // estamos en el locale correcto no hace nada y se cargan las herramientas.
+    // xbox.com es una SPA: route() se vuelve a llamar en cada navegación interna.
+    // Dos alcances distintos a propósito:
+    // – La redirección de locale se evalúa en TODA la tienda. Si ya estamos en el
+    //   locale correcto (o la ruta no lleva locale) no hace nada.
+    // – La interfaz —herramientas de la lista de deseos, botones de la ficha— solo
+    //   se monta en esas dos páginas; en el resto lo único que se hace es soltar
+    //   el estado de la ficha anterior.
     function route() {
         try {
             redirectIfNeeded();
-            if (isWishlist()) initWishlist();
-            else initProductLinks();
+
+            const product = isProductPage();
+            if (!product) forgetProductLinks();
+            if (product) initProductLinks();
+            else if (isWishlist()) initWishlist();
         } catch (e) { console.error('(xbox-store-locale-redirect): Error:', e); }
     }
 
