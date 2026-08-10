@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.4.1
-// @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On PC-playable games it adds GG.deals and PCGamingWiki buttons that search by the English name.
+// @version      2.5.0
+// @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On anything PC-playable, DLC and packs included, it adds GG.deals and PCGamingWiki buttons that search by the English name.
 // @author       g31w0fw0rld
 // @license      MIT
 // @match        https://www.xbox.com/*
@@ -45,7 +45,7 @@
     const I18N = {
         es: {
             sortLabel: 'Ordenar:', added: 'Agregado', name: 'Nombre', price: 'Precio', discount: 'Descuento',
-onlyDiscount: 'Solo con descuento', remember: 'Recordar',
+            onlyDiscount: 'Solo con descuento', remember: 'Recordar',
             copy: '🔗 Copiar enlace', copied: '✔ Copiado', copyPrompt: 'Copia este enlace:',
             about: 'ℹ️ Saber más', close: 'Cerrar',
             regionLabel: 'Redirección:',
@@ -57,6 +57,8 @@ onlyDiscount: 'Solo con descuento', remember: 'Recordar',
             copyTip: 'Copia un enlace que reproduce tu orden y filtros actuales al abrirlo.',
             regionTip: 'Elige el idioma/país (locale) al que redirigir las páginas de Xbox: vale para toda la tienda —catálogo, búsquedas, fichas y esta lista de deseos—. Con "Auto" no redirige. Pulsa "Aplicar" para guardar y redirigir ahora.',
             aboutTip: 'Ver qué hace este script en su totalidad.',
+            ggTip: 'Busca el título en GG.deals con el filtro de DRM de Microsoft Store. Al buscar por nombre, puede no dar con el juego exacto.',
+            pcgwTip: 'Busca el título en PCGamingWiki (compatibilidad y arreglos), sin el sufijo de edición. Al buscar por nombre puede no dar con el artículo exacto, y los DLC no tienen página propia.',
             aboutTitle: '¿Qué hace este script?',
             aboutBody: [
                 'Este script mejora Xbox Store en dos frentes:',
@@ -72,9 +74,9 @@ onlyDiscount: 'Solo con descuento', remember: 'Recordar',
                 '– Solo con descuento: muestra únicamente los juegos en oferta.',
                 '– Recordar: guarda tu orden y filtros y los reaplica al volver.',
                 '– Copiar enlace: genera una URL que reproduce tu orden y filtros. Si el navegador bloquea el portapapeles, la muestra en un diálogo para copiarla a mano.',
-                '• En las fichas de juego añade botones a GG.deals (precios/ofertas) y PCGamingWiki (compatibilidad y arreglos).',
-                '– Solo en juegos jugables en PC. Un juego solo de consola no los recibe; Xbox Play Anywhere sí, porque implica PC.',
-                '– Nada de DLC ni de aplicaciones: PCGamingWiki no tiene páginas de DLC, así que enlazarlos solo daría cero resultados.',
+                '• En las fichas de producto añade botones a GG.deals (precios/ofertas) y PCGamingWiki (compatibilidad y arreglos).',
+                '– Solo en lo jugable en PC. Un producto solo de consola no los recibe; Xbox Play Anywhere sí, porque implica PC.',
+                '– También en DLC, ediciones y paquetes. Ahí las búsquedas aciertan menos (PCGamingWiki documenta el juego base y no tiene páginas de DLC), pero cada botón ya avisa en su tooltip de que busca por nombre. Lo que no recibe botones son las apps y las suscripciones, que no son producto de juego.',
                 '– La plataforma se lee de la propia ficha, de la lista "Jugar con", que Xbox no traduce.',
                 '– El nombre se pide al catálogo público de Microsoft y se guarda en localStorage para no repetir la consulta. Hace falta porque se busca por el nombre en inglés, no por el título que ves: la ficha va traducida, hasta la URL, y las dos webs están indexadas en inglés. Si el catálogo no responde, no se ponen los botones.',
                 '– Al saltar de una ficha a otra sin recargar, lo que hay en pantalla tarda un momento en cambiar; hasta que el juego pintado coincide con el de la dirección no se pone nada, para no mezclar la plataforma de un juego con el nombre de otro.',
@@ -87,7 +89,7 @@ onlyDiscount: 'Solo con descuento', remember: 'Recordar',
         },
         en: {
             sortLabel: 'Sort:', added: 'Added', name: 'Name', price: 'Price', discount: 'Discount',
-onlyDiscount: 'Only discounted', remember: 'Remember',
+            onlyDiscount: 'Only discounted', remember: 'Remember',
             copy: '🔗 Copy link', copied: '✔ Copied', copyPrompt: 'Copy this link:',
             about: 'ℹ️ Learn more', close: 'Close',
             regionLabel: 'Redirect:',
@@ -99,6 +101,8 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
             copyTip: 'Copies a link that reproduces your current sort and filters when opened.',
             regionTip: 'Choose the language/country (locale) to redirect Xbox pages to: it holds across the whole store —catalog, searches, game pages and this wishlist—. With "Auto" it does not redirect. Click "Apply" to save and redirect now.',
             aboutTip: 'See everything this script does.',
+            ggTip: 'Searches the title on GG.deals with the Microsoft Store DRM filter. Being a title search, it may not hit the exact game.',
+            pcgwTip: 'Searches the title on PCGamingWiki (compatibility and fixes), without the edition suffix. Being a title search it may not hit the exact article, and DLC have no page of their own.',
             aboutTitle: 'What does this script do?',
             aboutBody: [
                 'This script improves Xbox Store in two ways:',
@@ -114,9 +118,9 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
                 '– Only discounted: shows only games on sale.',
                 '– Remember: saves your sort and filters and reapplies them on return.',
                 '– Copy link: builds a URL that reproduces your sort and filters. If the browser blocks clipboard access, it shows the URL in a dialog so you can copy it by hand.',
-                '• On game pages it adds buttons to GG.deals (prices/deals) and PCGamingWiki (compatibility and fixes).',
-                '– PC-playable games only. A console-only game gets nothing; Xbox Play Anywhere does, because it implies PC.',
-                '– No DLC and no apps: PCGamingWiki has no DLC pages, so linking them would only ever return nothing.',
+                '• On product pages it adds buttons to GG.deals (prices/deals) and PCGamingWiki (compatibility and fixes).',
+                '– PC-playable products only. A console-only one gets nothing; Xbox Play Anywhere does, because it implies PC.',
+                '– DLC, editions and packs get them too. The searches hit less often there (PCGamingWiki documents the base game and has no DLC pages), but each button already says in its tooltip that it searches by name. What gets no buttons are apps and subscriptions, which are not game products.',
                 '– The platform is read from the page itself, from the "Play with" list, which Xbox does not translate.',
                 '– The name is requested from Microsoft\'s public catalog and kept in localStorage to avoid repeating the call. It is needed because the search uses the English name, not the title you see: the page is translated, the URL included, and both sites are indexed in English. If the catalog does not answer, no buttons are added.',
                 '– When you jump between pages without reloading, what is on screen takes a moment to change; nothing is added until the game on screen matches the one in the address, so one game\'s platform is never paired with another\'s name.',
@@ -241,7 +245,7 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.4.1'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.5.0'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -700,6 +704,10 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
     // por build, así que hay que copiarla, no escribirla.
     const CONTAINER_CLASS_PREFIX = 'ModuleContainer-module__container';
 
+    // Tipos de producto que NO reciben botones. Es una lista de exclusión y no de
+    // inclusión a propósito: lo que no se reconozca pasa. Ver el uso, más abajo.
+    const NON_GAME_KINDS = /^(?:application|pass)$/i;
+
     const CATALOG_ENDPOINT = 'https://displaycatalog.mp.microsoft.com/v7.0/products';
     const CATALOG_CACHE_KEY = 'xbx-catalog-cache';
     const CATALOG_CACHE_TTL = 30 * 24 * 60 * 60 * 1000;   // 30 días
@@ -875,13 +883,17 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
         (document.head || document.documentElement).appendChild(style);
     }
 
-    // opts: { iconUrl } (favicon remoto) o { iconSvg } (SVG inline)
+    // opts: { iconUrl } (favicon remoto) o { iconSvg } (SVG inline), más { tooltip }:
+    // los dos botones buscan por nombre y pueden no acertar —y desde que también
+    // salen en DLC y paquetes, más—, así que la etiqueta sola no basta: carga el
+    // destino, y el tooltip carga la incertidumbre.
     function makeLinkButton(cls, label, href, opts) {
         const a = document.createElement('a');
         a.className = `xbx-btn ${cls}`;
         a.href = href;
         a.target = '_blank';
         a.rel = 'nofollow noopener external';
+        if (opts && opts.tooltip) a.title = opts.tooltip;
         if (opts && opts.iconSvg) {
             const span = document.createElement('span');
             span.className = 'xbx-ico';
@@ -935,9 +947,9 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
             title: normalizeForGgDeals(title)
         });
         box.appendChild(makeLinkButton('xbx-gg', 'GG.deals',
-            `${GGDEALS_SEARCH_URL}?${ggParams}`, { iconUrl: GGDEALS_ICON_URL }));
+            `${GGDEALS_SEARCH_URL}?${ggParams}`, { iconUrl: GGDEALS_ICON_URL, tooltip: t.ggTip }));
         box.appendChild(makeLinkButton('xbx-pcgw', 'PCGamingWiki',
-            PCGW_SEARCH_URL + encodeURIComponent(baseTitle), { iconSvg: PCGW_ICON_SVG }));
+            PCGW_SEARCH_URL + encodeURIComponent(baseTitle), { iconSvg: PCGW_ICON_SVG, tooltip: t.pcgwTip }));
         return box;
     }
 
@@ -1026,10 +1038,21 @@ onlyDiscount: 'Only discounted', remember: 'Remember',
         // Sin datos de catálogo no se ponen botones: sin el nombre en inglés
         // buscarían con el título localizado y caerían siempre en cero resultados.
         if (!info) { console.warn('(xbx-links): sin datos de catálogo, no se añaden botones'); return; }
-        // Durable = DLC, Consumable = moneda/packs, Application = app,
-        // PASS = suscripción. PCGamingWiki no tiene páginas de DLC, así que
-        // enlazarlos garantiza cero resultados.
-        if (info.kind !== 'Game') return;
+        // Kinds del catálogo: Game, Durable (DLC y add-ons), Consumable (moneda y
+        // packs), Application (app) y PASS (suscripción).
+        //
+        // Antes solo pasaba 'Game', para no mandar un DLC a PCGamingWiki, que
+        // documenta el juego base y no tiene páginas de DLC. Se descartó ese
+        // criterio: el resto de scripts de la familia (Steam, GOG, Epic,
+        // IndieGala) ponen sus botones también en DLC y paquetes, y ahí la regla
+        // es que más vale un enlace que puede no acertar —los dos tooltips ya lo
+        // avisan— que no tener ninguno. Xbox era el único que se salía.
+        //
+        // Se siguen excluyendo app y suscripción: no son producto de juego, así
+        // que un botón de precios/compatibilidad ahí no es que falle la búsqueda,
+        // es que no viene a cuento. Un kind desconocido pasa, a propósito: ante la
+        // duda, mejor ponerlo.
+        if (NON_GAME_KINDS.test(info.kind)) return;
 
         const anchor = await waitForValue(findLinkAnchor, 10000, token);
         if (token !== productNav || !anchor) return;

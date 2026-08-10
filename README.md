@@ -31,10 +31,10 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 - **Copy link:** builds a URL that reproduces your sort and filters when opened. If the browser blocks clipboard access, it shows the URL in a dialog so you can copy it by hand.
 - **"Learn more"** button with the full explanation inside the page, and a tooltip on every control.
 
-**Game pages**
-- Adds **GG.deals** (prices and deals) and **PCGamingWiki** (compatibility and fixes) buttons as their own row between the header and the information block, left-aligned with the first button above them.
-- **PC-playable games only.** A console-only game gets nothing; **Xbox Play Anywhere** does, because it implies PC.
-- **No DLC and no apps.** PCGamingWiki has no DLC pages, so linking them would only ever return nothing.
+**Product pages**
+- Adds **GG.deals** (prices and deals) and **PCGamingWiki** (compatibility and fixes) buttons as their own row between the header and the information block, left-aligned with the first button above them. Both are title searches, so **each says so in its tooltip** — the label carries the destination, the tooltip carries the uncertainty.
+- **PC-playable products only.** A console-only one gets nothing; **Xbox Play Anywhere** does, because it implies PC.
+- **DLC, editions and packs get them too.** The searches hit less often there — PCGamingWiki documents the base game and has no DLC pages — but each button already says in its tooltip that it searches by name, and the rest of the family (Steam, GOG, Epic, IndieGala) puts its buttons on DLC and packages as well. **Apps and subscriptions get nothing**, since they are not game products at all.
 - The platform comes from the page's own **"Play with" list**, whose labels Xbox does not translate. The catalog API cannot supply it: its `PlatformDependencies` field is empty for many games (Forza Horizon 5, Halo Wars 2) and misses PC games outright (Call of Duty: Warzone), while `AllowedPlatforms` says Windows.Desktop for **every** product, console-only ones included.
 - The search uses the **English name**, not the title on screen. Xbox translates the page — the URL slug included — while both destinations are indexed in English, so `Forza Horizon 5: Edición Estándar` would find nothing. The name comes from **Microsoft's public catalog**, keyed by the product code in the URL, and is cached in `localStorage`.
 - xbox.com is a single-page app, so when you move between games the page lags behind the URL for a moment. Nothing is inserted until the product rendered on screen matches the one in the address, so one game's platform is never paired with another's name.
@@ -71,10 +71,10 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 - **Copiar enlace:** genera una URL que al abrirla reproduce tu orden y tus filtros. Si el navegador bloquea el portapapeles, muestra la URL en un diálogo para copiarla a mano.
 - Botón **"Saber más"** con la explicación completa dentro de la página, y un tooltip en cada control.
 
-**Fichas de juego**
-- Añade botones a **GG.deals** (precios y ofertas) y **PCGamingWiki** (compatibilidad y arreglos) en una banda propia entre la cabecera y el bloque de información, alineados a la izquierda con el primer botón de arriba.
-- **Solo en juegos jugables en PC.** Un juego solo de consola no los recibe; **Xbox Play Anywhere** sí, porque implica PC.
-- **Nada de DLC ni de aplicaciones.** PCGamingWiki no tiene páginas de DLC, así que enlazarlos solo daría cero resultados.
+**Fichas de producto**
+- Añade botones a **GG.deals** (precios y ofertas) y **PCGamingWiki** (compatibilidad y arreglos) en una banda propia entre la cabecera y el bloque de información, alineados a la izquierda con el primer botón de arriba. Los dos buscan por título, así que **cada uno lo dice en su tooltip** — la etiqueta carga el destino y el tooltip la incertidumbre.
+- **Solo en lo jugable en PC.** Un producto solo de consola no los recibe; **Xbox Play Anywhere** sí, porque implica PC.
+- **También en DLC, ediciones y paquetes.** Ahí las búsquedas aciertan menos —PCGamingWiki documenta el juego base y no tiene páginas de DLC—, pero cada botón ya avisa en su tooltip de que busca por nombre, y el resto de la familia (Steam, GOG, Epic, IndieGala) también pone los suyos en DLC y paquetes. **Las apps y las suscripciones no reciben nada**, porque no son producto de juego.
 - La plataforma sale de la propia ficha, de la lista **"Jugar con"**, cuyos rótulos Xbox no traduce. La API de catálogo no puede darla: su campo `PlatformDependencies` viene vacío en muchos juegos (Forza Horizon 5, Halo Wars 2) y deja fuera a juegos de PC (Call of Duty: Warzone), mientras que `AllowedPlatforms` dice Windows.Desktop en **todos** los productos, también en los de solo consola.
 - La búsqueda usa el **nombre en inglés**, no el título que ves en pantalla. Xbox traduce la ficha —el slug de la URL incluido— y las dos webs de destino están indexadas en inglés, así que `Forza Horizon 5: Edición Estándar` no encontraría nada. El nombre viene del **catálogo público de Microsoft**, identificando el juego por el código de producto de la URL, y se guarda en `localStorage`.
 - xbox.com es una SPA, así que al moverte entre juegos la página va un momento por detrás de la URL. No se inserta nada hasta que el producto pintado en pantalla coincide con el de la dirección, así que nunca se empareja la plataforma de un juego con el nombre de otro.
