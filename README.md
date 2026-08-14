@@ -42,7 +42,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 - GG.deals gets the **full title**, edition included, because it has a page per edition — with accents stripped, since GG.deals transliterates its index. PCGamingWiki gets it **without packaging suffixes** (Standard, Deluxe, Premium…), because it documents the base game. Names that are genuinely separate releases — Definitive, Anniversary, Special, Remastered — are left untouched.
 - If the catalog does not answer, **no buttons are added**: a button that always lands on zero results is worse than no button.
 
-**Language:** automatic Spanish / English detection, following the language Xbox serves the page in. Note this is separate from the redirect locale: one is the script's own wording, the other is the store's region.
+**Language:** **13 languages** — Spanish, English, German, French, Italian, Dutch, Portuguese, Polish, Russian, Turkish, Japanese, Korean and Chinese. What wins is the locale you pick in the selector, so the toolbar speaks the same language as the page it sends you to instead of contradicting it; with `Auto`, or before you have picked anything, it falls back to the locale segment of the path (`/ja-jp/…`, which on `xbox.com` *is* the locale), then to `<html lang>`, then to your browser, then to English. The two are still different settings, though: one is how the script talks, the other is the store's region.
 
 **Install:**
 1. Install [Tampermonkey](https://www.tampermonkey.net/).
@@ -82,7 +82,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 - GG.deals recibe el **título completo**, con su edición, porque tiene ficha por edición — sin acentos, porque GG.deals translitera su índice. PCGamingWiki lo recibe **sin sufijos de empaquetado** (Standard, Deluxe, Premium…), porque documenta el juego base. Los nombres que sí son lanzamientos aparte —Definitive, Anniversary, Special, Remastered— se dejan intactos.
 - Si el catálogo no responde, **no se ponen los botones**: un botón que siempre cae en cero resultados es peor que no tenerlo.
 
-**Idioma:** detección automática español / inglés, siguiendo el idioma con el que Xbox sirve la página. Ojo, es independiente del locale de redirección: uno es cómo habla el script, el otro es la región de la tienda.
+**Idioma:** **13 idiomas** —español, inglés, alemán, francés, italiano, neerlandés, portugués, polaco, ruso, turco, japonés, coreano y chino—. Lo que manda es el locale que elijas en el selector, para que la barra hable el mismo idioma que la página a la que te lleva en vez de contradecirla; con `Auto`, o antes de que elijas nada, cae al segmento de locale de la ruta (`/ja-jp/…`, que en `xbox.com` **es** el locale), luego al `<html lang>`, luego al navegador, luego a inglés. Aun así son dos ajustes distintos: uno es cómo habla el script, el otro es la región de la tienda.
 
 **Instalación:**
 1. Instala [Tampermonkey](https://www.tampermonkey.net/).
