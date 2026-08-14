@@ -29,7 +29,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 - **Only discounted:** hides everything that is not on sale.
 - **Remember:** saves your sort and filters and reapplies them when you come back.
 - **Copy link:** builds a URL that reproduces your sort and filters when opened. If the browser blocks clipboard access, it shows the URL in a dialog so you can copy it by hand.
-- **"Learn more"** button with the full explanation inside the page, and a tooltip on every control.
+- **"Learn more"** button with the full explanation inside the page, and a tooltip on every control — **drawn by the script itself**, not by the browser: the store has no tooltip of its own to borrow (the only one on the page belongs to Microsoft's universal header), and this toolbar is the script's own UI, so the box uses its palette, opens on keyboard focus too, and is wide enough for the long ones. The browser tooltip stays underneath as the fallback.
 
 **Product pages**
 - Adds **GG.deals** (prices and deals) and **PCGamingWiki** (compatibility and fixes) buttons as their own row between the header and the information block, left-aligned with the first button above them. Both are title searches, so **each says so in its tooltip** — the label carries the destination, the tooltip carries the uncertainty.
@@ -69,7 +69,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 - **Solo con descuento:** oculta todo lo que no está en oferta.
 - **Recordar:** guarda tu orden y tus filtros y los reaplica al volver.
 - **Copiar enlace:** genera una URL que al abrirla reproduce tu orden y tus filtros. Si el navegador bloquea el portapapeles, muestra la URL en un diálogo para copiarla a mano.
-- Botón **"Saber más"** con la explicación completa dentro de la página, y un tooltip en cada control.
+- Botón **"Saber más"** con la explicación completa dentro de la página, y un tooltip en cada control —**dibujado por el propio script**, no por el navegador: la tienda no tiene tooltip propio que tomar prestado (el único de la página es el del header universal de Microsoft) y esta barra es UI del script, así que la caja usa su paleta, sale también al enfocar con el teclado y es lo bastante ancha para los avisos largos—. El del navegador se queda debajo como respaldo.
 
 **Fichas de producto**
 - Añade botones a **GG.deals** (precios y ofertas) y **PCGamingWiki** (compatibilidad y arreglos) en una banda propia entre la cabecera y el bloque de información, alineados a la izquierda con el primer botón de arriba. Los dos buscan por título, así que **cada uno lo dice en su tooltip** — la etiqueta carga el destino y el tooltip la incertidumbre.

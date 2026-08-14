@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.6.0
+// @version      2.6.1
 // @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On anything PC-playable, DLC and packs included, it adds GG.deals and PCGamingWiki buttons that search by the English name.
 // @author       g31w0fw0rld
 // @license      MIT
@@ -801,7 +801,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.6.0'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.6.1'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -1044,6 +1044,136 @@
         return sel;
     }
 
+    // =========================================================================
+    // TOOLTIP PROPIO
+    // =========================================================================
+    // La tienda no tiene tooltip que reutilizar: el único del HTML es el del header
+    // universal de Microsoft, y su CSS vive dentro de ese header; el cuerpo es React
+    // sin tooltips (comprobado contra el HTML real el 2026-08-13). Al revés que en
+    // Steam, GOG, Humble o Epic, aquí no hay nada de la tienda con lo que dibujar el
+    // aviso. Pero la barra y los dos botones ya son UI de este script, así que una
+    // caja propia no imita a nadie: es una pieza más suya.
+    //
+    // Fondo oscuro fijo en vez de heredado: la tienda cambia de tema según el sistema
+    // y una caja que herede colores acabaría ilegible en uno de los dos.
+    const TIP_ID = 'xbwl-tip';
+    const TIP_STYLES_ID = 'xbwl-tip-styles';
+    const TIP_DELAY_MS = 250;
+    const TIP_GAP = 8;      // hueco entre la caja y el control
+    const TIP_MARGIN = 8;   // margen que se respeta al borde de la ventana
+
+    let tipEl = null;
+    let tipAnchor = null;
+    let tipTimer = null;
+    let tipWindowBound = false;
+
+    function injectTipStyles() {
+        if (document.getElementById(TIP_STYLES_ID)) return;
+        const style = document.createElement('style');
+        style.id = TIP_STYLES_ID;
+        style.textContent = `
+            #${TIP_ID} {
+                position: fixed;
+                /* Alto, pero por debajo del modal de "Saber más" (2147483647), que sí
+                   debe taparlo. */
+                z-index: 2147483000;
+                max-width: 300px;
+                padding: 8px 10px;
+                background: #1b1b1b; color: #f2f2f2;
+                border: 1px solid #107c10;
+                border-radius: 6px;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+                font-size: 12px; line-height: 1.35;
+                /* Varios avisos pasan de cien caracteres: sin esto salen en una línea
+                   infinita fuera de la pantalla. */
+                white-space: normal;
+                /* La caja no puede robarle el hover al control ni taparle el clic. */
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.12s ease;
+            }
+            #${TIP_ID}.xbwl-tip-visible { opacity: 1; }
+        `;
+        (document.head || document.documentElement).appendChild(style);
+    }
+
+    function ensureTipNode() {
+        injectTipStyles();
+        if (tipEl && tipEl.isConnected) return tipEl;
+        tipEl = document.createElement('div');
+        tipEl.id = TIP_ID;
+        tipEl.setAttribute('role', 'tooltip');
+        document.body.appendChild(tipEl);
+        return tipEl;
+    }
+
+    /** Encima del control y centrada; debajo si arriba no cabe. */
+    function positionTip(anchor) {
+        const box = tipEl.getBoundingClientRect();
+        const a = anchor.getBoundingClientRect();
+        const vw = document.documentElement.clientWidth;
+        const vh = document.documentElement.clientHeight;
+
+        let top = a.top - box.height - TIP_GAP;
+        if (top < TIP_MARGIN) top = Math.min(a.bottom + TIP_GAP, vh - box.height - TIP_MARGIN);
+        let left = a.left + a.width / 2 - box.width / 2;
+        left = Math.max(TIP_MARGIN, Math.min(left, vw - box.width - TIP_MARGIN));
+
+        tipEl.style.top = `${top}px`;
+        tipEl.style.left = `${left}px`;
+    }
+
+    function showTip(anchor, text) {
+        if (!anchor.isConnected) return;  // la SPA se llevó el control durante la espera
+        ensureTipNode();
+        tipEl.textContent = text;
+        // El `title` se retira mientras la caja está arriba: si no, saldrían los dos,
+        // uno encima del otro. Vuelve al cerrarla, así que sigue siendo el respaldo
+        // (y el nombre accesible del control) el resto del tiempo.
+        anchor.removeAttribute('title');
+        tipAnchor = anchor;
+        positionTip(anchor);
+        tipEl.classList.add('xbwl-tip-visible');
+    }
+
+    function hideTip() {
+        clearTimeout(tipTimer);
+        tipTimer = null;
+        if (tipAnchor) {
+            if (!tipAnchor.title && tipAnchor.dataset.xbwlTip) tipAnchor.title = tipAnchor.dataset.xbwlTip;
+            tipAnchor = null;
+        }
+        if (tipEl) tipEl.classList.remove('xbwl-tip-visible');
+    }
+
+    /**
+     * Cuelga el tooltip propio de un control, por hover y por foco. El foco va con
+     * focusin/focusout, que burbujean: varios controles son un <label> y quien recibe
+     * el foco es la casilla o el <select> de dentro, así que con focus/blur el aviso
+     * no saldría nunca por teclado.
+     * @param {HTMLElement} el - El control, con su `title` ya puesto.
+     * @param {string} text - El mismo texto del title.
+     */
+    function attachTip(el, text) {
+        if (!text) return;
+        el.dataset.xbwlTip = text;   // de dónde se devuelve el title al cerrar
+        const open = () => {
+            clearTimeout(tipTimer);
+            tipTimer = setTimeout(() => showTip(el, text), TIP_DELAY_MS);
+        };
+        el.addEventListener('mouseenter', open);
+        el.addEventListener('focusin', open);
+        el.addEventListener('mouseleave', hideTip);
+        el.addEventListener('focusout', hideTip);
+        // Con la página en movimiento la caja quedaría flotando fuera de sitio. Una
+        // sola vez y no por control: la barra tiene ocho y las fichas dos.
+        if (!tipWindowBound) {
+            tipWindowBound = true;
+            window.addEventListener('scroll', hideTip, { passive: true, capture: true });
+            window.addEventListener('resize', hideTip, { passive: true });
+        }
+    }
+
     function buildToolbar() {
         injectStyles();
         const bar = document.createElement('div');
@@ -1051,6 +1181,7 @@
 
         const sortLabel = document.createElement('label');
         sortLabel.title = t.sortTip;
+        attachTip(sortLabel, t.sortTip);
         sortLabel.appendChild(document.createTextNode(t.sortLabel));
         const sortSel = document.createElement('select');
         SORTS.forEach((s) => {
@@ -1071,6 +1202,7 @@
         dirBtn.type = 'button';
         dirBtn.className = 'xbwl-dir';
         dirBtn.title = t.dirTip;
+        attachTip(dirBtn, t.dirTip);
         dirBtn.textContent = settings.dir === 'desc' ? '↓' : '↑';
         dirBtn.addEventListener('click', () => {
             settings.dir = settings.dir === 'desc' ? 'asc' : 'desc';
@@ -1080,6 +1212,7 @@
 
         const discLabel = document.createElement('label');
         discLabel.title = t.onlyDiscountTip;
+        attachTip(discLabel, t.onlyDiscountTip);
         const discChk = document.createElement('input');
         discChk.type = 'checkbox';
         discChk.checked = !!settings.onlyDiscount;
@@ -1089,6 +1222,7 @@
 
         const remLabel = document.createElement('label');
         remLabel.title = t.rememberTip;
+        attachTip(remLabel, t.rememberTip);
         const remChk = document.createElement('input');
         remChk.type = 'checkbox';
         remChk.checked = settings.remember !== false;
@@ -1100,6 +1234,7 @@
         shareBtn.type = 'button';
         shareBtn.className = 'xbwl-share';
         shareBtn.title = t.copyTip;
+        attachTip(shareBtn, t.copyTip);
         shareBtn.textContent = t.copy;
         shareBtn.addEventListener('click', async () => {
             const url = buildShareUrl();
@@ -1118,10 +1253,12 @@
         const regionText = document.createElement('span');
         regionText.textContent = t.regionLabel;
         regionText.title = t.regionTip;
+        attachTip(regionText, t.regionTip);
         regionText.style.fontWeight = '600';
 
         const localeWrap = document.createElement('label');
         localeWrap.title = t.regionTip;
+        attachTip(localeWrap, t.regionTip);
         localeWrap.appendChild(localeSel);
 
         // Botón "Aplicar": guarda el locale elegido y redirige la página actual
@@ -1131,6 +1268,7 @@
         applyBtn.className = 'xbwl-apply';
         applyBtn.textContent = t.applyLabel;
         applyBtn.title = t.applyTip;
+        attachTip(applyBtn, t.applyTip);
         applyBtn.addEventListener('click', () => {
             const target = localeSel.value;
             saveLocalePref(target);
@@ -1154,6 +1292,7 @@
         aboutBtn.type = 'button';
         aboutBtn.className = 'xbwl-about';
         aboutBtn.title = t.aboutTip;
+        attachTip(aboutBtn, t.aboutTip);
         aboutBtn.textContent = t.about;
         aboutBtn.addEventListener('click', showAboutModal);
 
@@ -1449,7 +1588,12 @@
         a.href = href;
         a.target = '_blank';
         a.rel = 'nofollow noopener external';
-        if (opts && opts.tooltip) a.title = opts.tooltip;
+        // El `title` se pone siempre: es el respaldo. attachTip() lo retira solo
+        // mientras dibuja la caja propia (ver la sección TOOLTIP PROPIO).
+        if (opts && opts.tooltip) {
+            a.title = opts.tooltip;
+            attachTip(a, opts.tooltip);
+        }
         if (opts && opts.iconSvg) {
             const span = document.createElement('span');
             span.className = 'xbx-ico';
