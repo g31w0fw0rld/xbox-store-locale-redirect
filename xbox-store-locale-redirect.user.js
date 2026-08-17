@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.6.1
+// @version      2.6.2
 // @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On anything PC-playable, DLC and packs included, it adds GG.deals and PCGamingWiki buttons that search by the English name.
 // @author       g31w0fw0rld
 // @license      MIT
@@ -59,6 +59,9 @@
             ggTip: 'Busca el título en GG.deals con el filtro de DRM de Microsoft Store. Al buscar por nombre, puede no dar con el juego exacto.',
             pcgwTip: 'Busca el título en PCGamingWiki (compatibilidad y arreglos), sin el sufijo de edición. Al buscar por nombre puede no dar con el artículo exacto, y los DLC no tienen página propia.',
             aboutTitle: '¿Qué hace este script?',
+            aboutName: 'Nombre:',
+            aboutVersion: 'Versión:',
+            aboutAuthor: 'Autor:',
             aboutBody: [
                 'Este script mejora Xbox Store en dos frentes:',
                 '• Redirección de región: lleva las páginas de Xbox al idioma/país (locale) que elijas en el selector. Con "Auto" no redirige.',
@@ -103,6 +106,9 @@
             ggTip: 'Searches the title on GG.deals with the Microsoft Store DRM filter. Being a title search, it may not hit the exact game.',
             pcgwTip: 'Searches the title on PCGamingWiki (compatibility and fixes), without the edition suffix. Being a title search it may not hit the exact article, and DLC have no page of their own.',
             aboutTitle: 'What does this script do?',
+            aboutName: 'Name:',
+            aboutVersion: 'Version:',
+            aboutAuthor: 'Author:',
             aboutBody: [
                 'This script improves Xbox Store in two ways:',
                 '• Region redirect: takes Xbox pages to the language/country (locale) you pick in the selector. With "Auto" it does not redirect.',
@@ -147,6 +153,9 @@
             ggTip: 'Sucht den Titel auf GG.deals mit dem DRM-Filter des Microsoft Store. Da es eine Titelsuche ist, wird nicht immer das exakte Spiel getroffen.',
             pcgwTip: 'Sucht den Titel auf PCGamingWiki (Kompatibilität und Fixes), ohne den Editionszusatz. Da es eine Titelsuche ist, wird nicht immer der exakte Artikel getroffen, und DLC haben keine eigene Seite.',
             aboutTitle: 'Was macht dieses Skript?',
+            aboutName: 'Name:',
+            aboutVersion: 'Version:',
+            aboutAuthor: 'Autor:',
             aboutBody: [
                 'Dieses Skript verbessert den Xbox Store an zwei Stellen:',
                 '• Regionsweiterleitung: bringt Xbox-Seiten in die Sprache bzw. das Land (Gebietsschema), das du im Auswahlmenü wählst. Mit „Automatisch“ wird nicht weitergeleitet.',
@@ -191,6 +200,9 @@
             ggTip: 'Recherche le titre sur GG.deals avec le filtre DRM du Microsoft Store. S’agissant d’une recherche par titre, le jeu exact peut ne pas être trouvé.',
             pcgwTip: 'Recherche le titre sur PCGamingWiki (compatibilité et correctifs), sans le suffixe d’édition. S’agissant d’une recherche par titre, l’article exact peut ne pas être trouvé, et les DLC n’ont pas de page propre.',
             aboutTitle: 'Que fait ce script ?',
+            aboutName: 'Nom :',
+            aboutVersion: 'Version :',
+            aboutAuthor: 'Auteur :',
             aboutBody: [
                 'Ce script améliore le Xbox Store sur deux fronts :',
                 '• Redirection de région : emmène les pages Xbox vers la langue et le pays (paramètres régionaux) choisis dans le sélecteur. Avec « Auto », aucune redirection.',
@@ -235,6 +247,9 @@
             ggTip: 'Cerca il titolo su GG.deals con il filtro DRM del Microsoft Store. Trattandosi di una ricerca per titolo, potrebbe non trovare il gioco esatto.',
             pcgwTip: 'Cerca il titolo su PCGamingWiki (compatibilità e correzioni), senza il suffisso di edizione. Trattandosi di una ricerca per titolo potrebbe non trovare la voce esatta, e i DLC non hanno una pagina propria.',
             aboutTitle: 'Che cosa fa questo script?',
+            aboutName: 'Nome:',
+            aboutVersion: 'Versione:',
+            aboutAuthor: 'Autore:',
             aboutBody: [
                 'Questo script migliora lo Xbox Store su due fronti:',
                 '• Reindirizzamento di regione: porta le pagine Xbox alla lingua e al paese (impostazioni internazionali) che scegli nel selettore. Con «Auto» non reindirizza.',
@@ -279,6 +294,9 @@
             ggTip: 'Zoekt de titel op GG.deals met het DRM-filter van de Microsoft Store. Omdat het een titelzoekopdracht is, wordt niet altijd het exacte spel gevonden.',
             pcgwTip: 'Zoekt de titel op PCGamingWiki (compatibiliteit en fixes), zonder het editiesuffix. Omdat het een titelzoekopdracht is wordt niet altijd het exacte artikel gevonden, en DLC hebben geen eigen pagina.',
             aboutTitle: 'Wat doet dit script?',
+            aboutName: 'Naam:',
+            aboutVersion: 'Versie:',
+            aboutAuthor: 'Auteur:',
             aboutBody: [
                 'Dit script verbetert de Xbox Store op twee vlakken:',
                 '• Regio-omleiding: brengt Xbox-pagina’s naar de taal en het land (landinstelling) die je in de keuzelijst kiest. Met "Auto" wordt er niet omgeleid.',
@@ -323,6 +341,9 @@
             ggTip: 'Procura o título no GG.deals com o filtro de DRM da Microsoft Store. Sendo uma pesquisa por título, pode não encontrar o jogo exato.',
             pcgwTip: 'Procura o título no PCGamingWiki (compatibilidade e correções), sem o sufixo de edição. Sendo uma pesquisa por título pode não encontrar o artigo exato, e os DLC não têm página própria.',
             aboutTitle: 'O que faz este script?',
+            aboutName: 'Nome:',
+            aboutVersion: 'Versão:',
+            aboutAuthor: 'Autor:',
             aboutBody: [
                 'Este script melhora a Xbox Store em duas frentes:',
                 '• Redirecionamento de região: leva as páginas da Xbox para o idioma e país (região) que escolher no seletor. Com "Automático" não redireciona.',
@@ -367,6 +388,9 @@
             ggTip: 'Wyszukuje tytuł w GG.deals z filtrem DRM Microsoft Store. Ponieważ to wyszukiwanie po tytule, może nie trafić w dokładną grę.',
             pcgwTip: 'Wyszukuje tytuł w PCGamingWiki (zgodność i poprawki), bez końcówki edycji. Ponieważ to wyszukiwanie po tytule, może nie trafić w dokładny artykuł, a dodatki DLC nie mają własnej strony.',
             aboutTitle: 'Co robi ten skrypt?',
+            aboutName: 'Nazwa:',
+            aboutVersion: 'Wersja:',
+            aboutAuthor: 'Autor:',
             aboutBody: [
                 'Ten skrypt ulepsza Xbox Store na dwa sposoby:',
                 '• Przekierowanie regionu: przenosi strony Xbox do języka i kraju (ustawień regionalnych) wybranych w liście. Przy „Auto” nie przekierowuje.',
@@ -411,6 +435,9 @@
             ggTip: 'Ищет название на GG.deals с фильтром DRM Microsoft Store. Это поиск по названию, поэтому нужная игра может не найтись.',
             pcgwTip: 'Ищет название на PCGamingWiki (совместимость и исправления), без суффикса издания. Это поиск по названию, поэтому нужная статья может не найтись, а у дополнений нет своей страницы.',
             aboutTitle: 'Что делает этот скрипт?',
+            aboutName: 'Название:',
+            aboutVersion: 'Версия:',
+            aboutAuthor: 'Автор:',
             aboutBody: [
                 'Этот скрипт улучшает Xbox Store по двум направлениям:',
                 '• Перенаправление региона: переводит страницы Xbox на язык и страну, выбранные в списке. При «Авто» перенаправления нет.',
@@ -455,6 +482,9 @@
             ggTip: 'Başlığı GG.deals üzerinde Microsoft Store DRM filtresiyle arar. Başlığa göre arama olduğu için tam olarak aradığınız oyunu bulamayabilir.',
             pcgwTip: 'Başlığı PCGamingWiki üzerinde arar (uyumluluk ve düzeltmeler), sürüm ekini kullanmadan. Başlığa göre arama olduğu için tam makaleyi bulamayabilir ve ek paketlerin kendine ait sayfası yoktur.',
             aboutTitle: 'Bu betik ne yapar?',
+            aboutName: 'Ad:',
+            aboutVersion: 'Sürüm:',
+            aboutAuthor: 'Yazar:',
             aboutBody: [
                 'Bu betik Xbox Store’u iki noktada iyileştirir:',
                 '• Bölge yönlendirmesi: Xbox sayfalarını seçicide seçtiğiniz dil ve ülkeye (yerel ayar) götürür. "Otomatik" seçiliyken yönlendirme yapmaz.',
@@ -499,6 +529,9 @@
             ggTip: 'GG.deals で Microsoft Store の DRM フィルターを使ってタイトルを検索します。タイトル検索のため、目的のゲームに正確に一致しない場合があります。',
             pcgwTip: 'PCGamingWiki でタイトルを検索します（互換性と修正）。エディションの接尾辞は外します。タイトル検索のため目的の記事に一致しないことがあり、DLC には専用ページがありません。',
             aboutTitle: 'このスクリプトは何をしますか？',
+            aboutName: '名前:',
+            aboutVersion: 'バージョン:',
+            aboutAuthor: '作者:',
             aboutBody: [
                 'このスクリプトは Xbox ストアを2つの面で改善します:',
                 '• 地域リダイレクト: Xbox のページを、選択した言語・国（ロケール）へ移動させます。「自動」ではリダイレクトしません。',
@@ -543,6 +576,9 @@
             ggTip: 'GG.deals에서 Microsoft Store DRM 필터로 제목을 검색합니다. 제목 검색이므로 정확한 게임을 찾지 못할 수 있습니다.',
             pcgwTip: 'PCGamingWiki에서 제목을 검색합니다(호환성 및 수정). 에디션 접미사는 뺍니다. 제목 검색이라 정확한 문서를 찾지 못할 수 있고, DLC는 자체 문서가 없습니다.',
             aboutTitle: '이 스크립트는 무엇을 하나요?',
+            aboutName: '이름:',
+            aboutVersion: '버전:',
+            aboutAuthor: '작성자:',
             aboutBody: [
                 '이 스크립트는 Xbox 스토어를 두 가지 방향에서 개선합니다:',
                 '• 지역 리디렉션: Xbox 페이지를 선택기에서 고른 언어와 국가(로캘)로 보냅니다. "자동"에서는 리디렉션하지 않습니다.',
@@ -587,6 +623,9 @@
             ggTip: '在 GG.deals 上按 Microsoft Store DRM 筛选搜索该标题。由于是按标题搜索，可能无法精确匹配到该游戏。',
             pcgwTip: '在 PCGamingWiki 上搜索该标题（兼容性与修复），不带版本后缀。由于是按标题搜索，可能无法精确匹配到对应条目，而且 DLC 没有独立页面。',
             aboutTitle: '这个脚本有什么用？',
+            aboutName: '名称：',
+            aboutVersion: '版本：',
+            aboutAuthor: '作者：',
             aboutBody: [
                 '本脚本从两个方面改进 Xbox 商店：',
                 '• 区域重定向：把 Xbox 页面带到你在选择器中选定的语言和国家/地区（区域设置）。选择“自动”则不重定向。',
@@ -801,7 +840,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.6.1'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.6.2'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -957,77 +996,227 @@
     }
 
     // --- Modal "Saber más" (autocontenido) --------------------------------------
+    // Tres bandas: cabecera fija (título + ficha), cuerpo scrollable y botón fijo,
+    // como el modal de información de los scripts de Twitch y Kick. Antes scrolleaba
+    // la caja ENTERA, y con un cuerpo de dos docenas de párrafos eso se llevaba el
+    // título fuera de vista y dejaba el botón de cerrar al final del scroll: se abría
+    // un panel sin encabezado del que no era evidente cómo salir.
+    const ABOUT_ID = 'xbwl-about-overlay';
+    const ABOUT_NAME = 'Xbox Store Locale Redirect';
+    const ABOUT_REPO = 'g31w0fw0rld/xbox-store-locale-redirect';
+    // Paleta del modal: el verde de acción de Xbox, su tono claro para acentos sobre
+    // fondo oscuro, y grises verdosos para lo secundario.
+    const ABOUT_BG = '#0e1512';
+    const ABOUT_FG = '#f2f5f3';
+    const ABOUT_ACCENT = '#6cc24a';
+    const ABOUT_BTN = '#107c10';
+    const ABOUT_BTN_HOVER = '#0b5e0b';
+    const ABOUT_LINE = '#22352a';
+    const ABOUT_MUTED = '#9fb3a4';
+    const ABOUT_ITEM = '#c9d6cc';
+
+    // El separador de las etiquetas ("Nombre:" / "Nom :" / "名称：") se toma de una
+    // ya traducida, para que "GitHub" y "Ko-fi" —que no se traducen— no contradigan
+    // la puntuación del idioma activo.
+    function aboutColon() {
+        const m = String(t.aboutVersion || ':').match(/\s*[:：]\s*$/);
+        return m ? m[0] : ':';
+    }
+
+    // Marca inerte el resto de la página mientras el modal está abierto, y guarda lo
+    // que hubiera para devolverlo tal cual al cerrar. Sin esto el tabulador se pasea
+    // por la tienda que hay detrás del overlay, que no se ve pero sigue ahí.
+    function aboutSetInert(overlay, on) {
+        if (on) {
+            const saved = [];
+            Array.from(document.body.children).forEach((el) => {
+                if (el === overlay) return;
+                saved.push({ el, ariaHidden: el.getAttribute('aria-hidden') });
+                try { el.setAttribute('aria-hidden', 'true'); el.inert = true; } catch (e) { /* noop */ }
+            });
+            overlay._savedInert = saved;
+        } else {
+            (overlay._savedInert || []).forEach((s) => {
+                try {
+                    if (s.ariaHidden === null) s.el.removeAttribute('aria-hidden');
+                    else s.el.setAttribute('aria-hidden', s.ariaHidden);
+                    s.el.inert = false;
+                } catch (e) { /* noop */ }
+            });
+            overlay._savedInert = null;
+        }
+    }
+
+    // Una fila del cuerpo. Los marcadores del texto ('•' grupo, '–' subpunto) son
+    // ESTRUCTURA, no texto: se consumen y se traducen a jerarquía visual. La sangría
+    // es francesa (padding + text-indent negativo) para que al partirse la línea la
+    // segunda no vuelva al margen y el marcador siga marcando columna.
+    function aboutRow(raw, prevKind) {
+        const text = String(raw).replace(/^\s+/, '');
+        const row = document.createElement('div');
+        let kind = 'plain';
+        if (text.startsWith('•')) {
+            kind = 'group';
+            row.textContent = text.slice(1).trim();
+            Object.assign(row.style, {
+                color: ABOUT_ACCENT, fontWeight: '600', marginBottom: '8px',
+                marginTop: prevKind ? '18px' : '0'
+            });
+        } else if (text.startsWith('–')) {
+            kind = 'item';
+            row.textContent = text;
+            Object.assign(row.style, {
+                paddingInlineStart: '30px', textIndent: '-16px', marginBottom: '7px', color: ABOUT_ITEM
+            });
+        } else {
+            row.textContent = text;
+            row.style.marginBottom = '10px';
+            // Un párrafo suelto detrás de una lista es la coda del bloque, no otro
+            // punto de la lista: sin este respiro se lee pegado al último subpunto.
+            if (prevKind && prevKind !== 'plain') row.style.marginTop = '16px';
+        }
+        return { row, kind };
+    }
+
     function showAboutModal() {
-        if (document.getElementById('xbwl-about-overlay')) return;
+        if (document.getElementById(ABOUT_ID)) return;
         const overlay = document.createElement('div');
-        overlay.id = 'xbwl-about-overlay';
+        overlay.id = ABOUT_ID;
         Object.assign(overlay.style, {
             position: 'fixed', inset: '0', width: '100%', height: '100%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            // El padding reserva el hueco contra el que se acota la caja (maxHeight
+            // al 100%), y de paso evita que quede pegada a los bordes de la ventana.
+            padding: '24px', boxSizing: 'border-box',
             background: 'rgba(0,0,0,0.6)', zIndex: '2147483647',
             transition: 'opacity 180ms ease', opacity: '0'
         });
         const box = document.createElement('div');
         Object.assign(box.style, {
-            background: '#0e1512', color: '#f2f5f3', borderRadius: '14px',
-            padding: '26px 30px', minWidth: '320px', maxWidth: '560px',
-            maxHeight: '80vh', overflowY: 'auto', boxSizing: 'border-box',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: '1px solid #107c10',
-            fontFamily: 'Segoe UI, system-ui, sans-serif', fontSize: '14px', lineHeight: '1.5',
+            background: ABOUT_BG, color: ABOUT_FG, borderRadius: '14px',
+            padding: '26px 30px', minWidth: 'min(340px, 100%)', maxWidth: '560px',
+            maxHeight: '100%', boxSizing: 'border-box',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5)', border: `1px solid ${ABOUT_BTN}`,
+            fontFamily: 'Segoe UI, system-ui, sans-serif', fontSize: '14px', lineHeight: '1.55',
+            // Flex en columna con overflow oculto: scrollea solo la banda del medio.
+            display: 'flex', flexDirection: 'column', overflow: 'hidden',
             transform: 'translateY(8px) scale(0.98)', opacity: '0',
             transition: 'transform 180ms ease, opacity 180ms ease'
         });
+
+        const hairline = () => {
+            const hr = document.createElement('div');
+            Object.assign(hr.style, {
+                height: '1px', background: ABOUT_LINE, margin: '14px 0', flexShrink: '0'
+            });
+            return hr;
+        };
+
+        // --- Cabecera fija: título y ficha ---
+        const head = document.createElement('div');
+        head.style.flexShrink = '0';
+
         const title = document.createElement('div');
         title.textContent = t.aboutTitle;
-        title.style.cssText = 'font-weight:bold;font-size:17px;margin-bottom:14px;color:#6cc24a;';
-        box.appendChild(title);
-        (t.aboutBody || []).forEach((p) => {
-            const row = document.createElement('div');
-            const trimmed = String(p).replace(/^\s+/, '');
-            row.textContent = trimmed;
-            row.style.marginBottom = '8px';
-            if (trimmed.startsWith('–')) row.style.paddingLeft = '22px';
-            else if (trimmed.startsWith('•')) row.style.paddingLeft = '10px';
-            box.appendChild(row);
+        title.style.cssText = `font-weight:bold;font-size:17px;margin-bottom:12px;color:${ABOUT_ACCENT};`;
+        head.appendChild(title);
+
+        // Ficha en rejilla de dos columnas: así los cinco valores quedan alineados
+        // en vez de escalonados según lo que mida cada etiqueta.
+        const meta = document.createElement('div');
+        Object.assign(meta.style, {
+            display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr)',
+            columnGap: '10px', rowGap: '5px', fontSize: '13px'
         });
-        const gh = document.createElement('a');
-        gh.href = 'https://github.com/g31w0fw0rld/xbox-store-locale-redirect';
-        gh.target = '_blank'; gh.rel = 'noopener';
-        gh.textContent = 'github.com/g31w0fw0rld/xbox-store-locale-redirect';
-        gh.style.cssText = 'display:inline-block;margin-top:6px;color:#6cc24a;text-decoration:underline;font-size:12px;';
-        box.appendChild(gh);
-        const kofi = document.createElement('a');
-        kofi.href = 'https://ko-fi.com/g31w0fw0rld';
-        kofi.target = '_blank'; kofi.rel = 'noopener';
-        kofi.textContent = '☕ Apóyame en Ko-fi / Support me on Ko-fi';
-        kofi.style.cssText = 'display:block;margin-top:8px;color:#6cc24a;text-decoration:underline;font-size:12px;';
-        box.appendChild(kofi);
-        const foot = document.createElement('div');
-        foot.textContent = 'v' + SCRIPT_VERSION + ' · g31w0fw0rld';
-        foot.style.cssText = 'margin-top:2px;font-size:12px;opacity:0.7;';
-        box.appendChild(foot);
+        const colon = aboutColon();
+        [
+            { label: t.aboutName, value: ABOUT_NAME },
+            { label: t.aboutVersion, value: SCRIPT_VERSION },
+            { label: t.aboutAuthor, value: 'g31w0fw0rld' },
+            { label: 'GitHub' + colon, value: 'github.com/' + ABOUT_REPO, isLink: true },
+            { label: '☕ Ko-fi' + colon, value: 'ko-fi.com/g31w0fw0rld', isLink: true }
+        ].forEach((r) => {
+            const label = document.createElement('div');
+            label.textContent = r.label;
+            Object.assign(label.style, { fontWeight: '600', color: ABOUT_MUTED, whiteSpace: 'nowrap' });
+            meta.appendChild(label);
+            const val = document.createElement('div');
+            // Sin esto la URL no parte y estira la caja más allá de su maxWidth.
+            Object.assign(val.style, { minWidth: '0', overflowWrap: 'anywhere' });
+            if (r.isLink) {
+                const a = document.createElement('a');
+                a.href = 'https://' + r.value;
+                a.textContent = r.value;
+                a.target = '_blank'; a.rel = 'noopener noreferrer';
+                a.style.color = ABOUT_ACCENT;
+                a.style.textDecoration = 'underline';
+                val.appendChild(a);
+            } else {
+                val.textContent = r.value;
+            }
+            meta.appendChild(val);
+        });
+        head.appendChild(meta);
+        head.appendChild(hairline());
+        box.appendChild(head);
+
+        // --- Cuerpo scrollable ---
+        const body = document.createElement('div');
+        Object.assign(body.style, {
+            overflowY: 'auto', minHeight: '0', paddingInlineEnd: '4px'
+        });
+        // `prevKind` arranca en null a propósito: marca "no hay nada encima", que es
+        // lo que distingue al primer párrafo (pegado a la línea divisoria de la
+        // cabecera, sin margen extra) de los demás.
+        let prevKind = null;
+        (t.aboutBody || []).forEach((p) => {
+            const { row, kind } = aboutRow(p, prevKind);
+            body.appendChild(row);
+            prevKind = kind;
+        });
+        box.appendChild(body);
+        box.appendChild(hairline());
+
+        // --- Botón fijo ---
         const closeBtn = document.createElement('button');
         closeBtn.type = 'button';
         closeBtn.textContent = t.close;
-        closeBtn.style.cssText = 'display:block;margin-top:16px;padding:8px 14px;background:#107c10;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;';
+        closeBtn.style.cssText = `flex-shrink:0;align-self:center;padding:8px 18px;background:${ABOUT_BTN};color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;`;
+        closeBtn.addEventListener('mouseenter', () => { closeBtn.style.background = ABOUT_BTN_HOVER; });
+        closeBtn.addEventListener('mouseleave', () => { closeBtn.style.background = ABOUT_BTN; });
         box.appendChild(closeBtn);
+
+        // El listener de Escape vive en document —el modal no tiene por qué tener el
+        // foco dentro cuando llega la tecla—, así que hay que quitarlo SIEMPRE al
+        // cerrar, también desde el botón: si no, se acumula uno por cada apertura.
         const closeIt = () => {
+            document.removeEventListener('keydown', onKey);
+            overlay.removeEventListener('click', onClick);
             overlay.style.opacity = '0'; box.style.opacity = '0';
             box.style.transform = 'translateY(8px) scale(0.98)';
-            document.removeEventListener('keydown', onKey);
-            setTimeout(() => overlay.remove(), 180);
+            setTimeout(() => {
+                aboutSetInert(overlay, false);
+                overlay.remove();
+            }, 180);
         };
         const onKey = (e) => { if (e.key === 'Escape') closeIt(); };
+        // Solo el fondo: un clic dentro de la caja no debe cerrar.
+        const onClick = (e) => { if (e.target === overlay) closeIt(); };
         closeBtn.addEventListener('click', closeIt);
-        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeIt(); });
+        overlay.addEventListener('click', onClick);
         document.addEventListener('keydown', onKey);
+
         overlay.appendChild(box);
         document.body.appendChild(overlay);
+        aboutSetInert(overlay, true);
         setTimeout(() => {
             overlay.style.opacity = '1';
             box.style.transform = 'translateY(0) scale(1)';
             box.style.opacity = '1';
         }, 10);
+        // Sin esto el foco se queda en el ℹ️ de la barra, que aboutSetInert acaba de
+        // marcar inert, y se cae a <body>.
+        setTimeout(() => { try { closeBtn.focus(); } catch (e) { /* noop */ } }, 120);
     }
 
     // Construye el <select> único de locales a partir de LOCALES. El label de cada
