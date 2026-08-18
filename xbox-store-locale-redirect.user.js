@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.6.2
+// @version      2.7.0
 // @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On anything PC-playable, DLC and packs included, it adds GG.deals and PCGamingWiki buttons that search by the English name.
 // @author       g31w0fw0rld
 // @license      MIT
@@ -57,7 +57,7 @@
             regionTip: 'Elige el idioma/país (locale) al que redirigir las páginas de Xbox: vale para toda la tienda —catálogo, búsquedas, fichas y esta lista de deseos—. Con "Auto" no redirige. Pulsa "Aplicar" para guardar y redirigir ahora.',
             aboutTip: 'Ver qué hace este script en su totalidad.',
             ggTip: 'Busca el título en GG.deals con el filtro de DRM de Microsoft Store. Al buscar por nombre, puede no dar con el juego exacto.',
-            pcgwTip: 'Busca el título en PCGamingWiki (compatibilidad y arreglos), sin el sufijo de edición. Al buscar por nombre puede no dar con el artículo exacto, y los DLC no tienen página propia.',
+            pcgwTip: 'Busca en PCGamingWiki (compatibilidad y arreglos) el juego en sí: sin el sufijo de edición y, en DLC y paquetes, por su juego base. Al buscar por nombre, puede no dar con el artículo exacto.',
             aboutTitle: '¿Qué hace este script?',
             aboutName: 'Nombre:',
             aboutVersion: 'Versión:',
@@ -78,14 +78,14 @@
                 '– Copiar enlace: genera una URL que reproduce tu orden y filtros. Si el navegador bloquea el portapapeles, la muestra en un diálogo para copiarla a mano.',
                 '• En las fichas de producto añade botones a GG.deals (precios/ofertas) y PCGamingWiki (compatibilidad y arreglos).',
                 '– Solo en lo jugable en PC. Un producto solo de consola no los recibe; Xbox Play Anywhere sí, porque implica PC.',
-                '– También en DLC, ediciones y paquetes. Ahí las búsquedas aciertan menos (PCGamingWiki documenta el juego base y no tiene páginas de DLC), pero cada botón ya avisa en su tooltip de que busca por nombre. Lo que no recibe botones son las apps y las suscripciones, que no son producto de juego.',
+                '– También en DLC, ediciones y paquetes, y ahí PCGamingWiki busca el juego base, que es donde los documenta. Lo que no recibe botones son las apps y las suscripciones, que no son producto de juego.',
                 '– La plataforma se lee de la propia ficha, de la lista "Jugar con", que Xbox no traduce.',
                 '– El nombre se pide al catálogo público de Microsoft y se guarda en localStorage para no repetir la consulta. Hace falta porque se busca por el nombre en inglés, no por el título que ves: la ficha va traducida, hasta la URL, y las dos webs están indexadas en inglés. Si el catálogo no responde, no se ponen los botones.',
                 '– Al saltar de una ficha a otra sin recargar, lo que hay en pantalla tarda un momento en cambiar; hasta que el juego pintado coincide con el de la dirección no se pone nada, para no mezclar la plataforma de un juego con el nombre de otro.',
                 '– El script se carga en toda la tienda para enterarse de esos saltos vengan de donde vengan (del catálogo, de una búsqueda), porque Xbox cambia de página sin recargar y así los botones salen sin tener que recargar tú. Fuera de las fichas y de la lista de deseos no pinta nada: lo único que hace en el resto de la tienda es la redirección de región.',
                 '– GG.deals se abre ya filtrado por el DRM de Microsoft Store, igual que los scripts de Steam, GOG y Epic hacen con el suyo, y sin el mínimo de valoración que trae por defecto y que esconde parte de las ofertas.',
                 '– Al nombre se le quita el "(PC)" que Microsoft cuelga cuando el mismo juego tiene ficha de PC y de consola, porque no es parte del título y ninguna de las dos webs lo lleva.',
-                '– GG.deals recibe el título completo, con su edición (y sin acentos, porque translitera su índice); PCGamingWiki lo recibe sin sufijos de empaquetado (Standard, Deluxe, Premium…), porque documenta el juego base. Los que sí son lanzamientos aparte (Definitive, Anniversary, Special, Remastered) se dejan tal cual.',
+                '– GG.deals recibe el título completo, con su edición (y sin acentos, porque translitera su índice); PCGamingWiki recibe el juego en sí: sin sufijos de empaquetado (Standard, Deluxe, Premium…) y, en un DLC o una edición, por su juego base, que Microsoft publica como el grupo de producto que comparten todos los SKU de un mismo juego. Ese grupo solo se usa si de verdad aparece dentro del título: a veces es un nombre interno ("Boost" en Devil May Cry 5 Special Edition) y buscar eso sería peor que no tocar nada. Los que sí son lanzamientos aparte (Definitive, Anniversary, Special, Remastered) se dejan tal cual.',
                 'La preferencia de país/idioma se guarda en una cookie de xbox.com, para que valga en toda la tienda y no solo en la pestaña actual; el resto va en localStorage. La única petición externa es al catálogo público de Microsoft, para saber el nombre en inglés del juego que estás viendo: se manda solo el código de producto de la URL, sin cookies ni sesión, y la respuesta se guarda en localStorage. No se envía nada a terceros ni al autor.'
             ]
         },
@@ -104,7 +104,7 @@
             regionTip: 'Choose the language/country (locale) to redirect Xbox pages to: it holds across the whole store —catalog, searches, game pages and this wishlist—. With "Auto" it does not redirect. Click "Apply" to save and redirect now.',
             aboutTip: 'See everything this script does.',
             ggTip: 'Searches the title on GG.deals with the Microsoft Store DRM filter. Being a title search, it may not hit the exact game.',
-            pcgwTip: 'Searches the title on PCGamingWiki (compatibility and fixes), without the edition suffix. Being a title search it may not hit the exact article, and DLC have no page of their own.',
+            pcgwTip: 'Searches PCGamingWiki (compatibility and fixes) for the game itself: without the edition suffix, and for DLC and packs, by their base game. Being a name search, it may not hit the exact article.',
             aboutTitle: 'What does this script do?',
             aboutName: 'Name:',
             aboutVersion: 'Version:',
@@ -125,14 +125,14 @@
                 '– Copy link: builds a URL that reproduces your sort and filters. If the browser blocks clipboard access, it shows the URL in a dialog so you can copy it by hand.',
                 '• On product pages it adds buttons to GG.deals (prices/deals) and PCGamingWiki (compatibility and fixes).',
                 '– PC-playable products only. A console-only one gets nothing; Xbox Play Anywhere does, because it implies PC.',
-                '– DLC, editions and packs get them too. The searches hit less often there (PCGamingWiki documents the base game and has no DLC pages), but each button already says in its tooltip that it searches by name. What gets no buttons are apps and subscriptions, which are not game products.',
+                '– DLC, editions and packs get them too, and there PCGamingWiki searches the base game, which is where it documents them. What gets no buttons are apps and subscriptions, which are not game products.',
                 '– The platform is read from the page itself, from the "Play with" list, which Xbox does not translate.',
                 '– The name is requested from Microsoft\'s public catalog and kept in localStorage to avoid repeating the call. It is needed because the search uses the English name, not the title you see: the page is translated, the URL included, and both sites are indexed in English. If the catalog does not answer, no buttons are added.',
                 '– When you jump between pages without reloading, what is on screen takes a moment to change; nothing is added until the game on screen matches the one in the address, so one game\'s platform is never paired with another\'s name.',
                 '– The script loads across the whole store so it catches those jumps wherever they come from (the catalog, a search), because Xbox changes page without reloading and this way the buttons show up with no reload needed. Outside game pages and the wishlist it draws nothing: the only thing it does elsewhere in the store is the region redirect.',
                 '– GG.deals opens already filtered to the Microsoft Store DRM, the same way the Steam, GOG and Epic scripts do with theirs, and without the default minimum store rating that hides part of the deals.',
                 '– The "(PC)" that Microsoft hangs on the name when the same game has both a PC and a console page is dropped, since it is not part of the title and neither destination carries it.',
-                '– GG.deals gets the full title, edition included (and without accents, since it transliterates its index); PCGamingWiki gets it without packaging suffixes (Standard, Deluxe, Premium…), because it documents the base game. The ones that are genuinely separate releases (Definitive, Anniversary, Special, Remastered) are left alone.',
+                '– GG.deals gets the full title, edition included (and without accents, since it transliterates its index); PCGamingWiki gets the game itself: without packaging suffixes (Standard, Deluxe, Premium…) and, on a DLC or an edition, by its base game, which Microsoft publishes as the product group shared by every SKU of one game. That group is only used when it really appears inside the title: sometimes it is an internal name ("Boost" for Devil May Cry 5 Special Edition) and searching for it would be worse than doing nothing. Genuinely separate releases (Definitive, Anniversary, Special, Remastered) are left alone.',
                 'The country/language preference is stored in an xbox.com cookie, so it holds across the whole store and not just the current tab; the rest goes in localStorage. The only external request goes to Microsoft\'s public catalog, to learn the English name of the game you are looking at: it sends just the product code from the URL, with no cookies or session, and the answer is kept in localStorage. Nothing is sent to third parties or to the author.'
             ]
         },
@@ -151,7 +151,7 @@
             regionTip: 'Wähle Sprache und Land (Gebietsschema), wohin Xbox-Seiten weitergeleitet werden sollen: es gilt im ganzen Store – Katalog, Suche, Spielseiten und diese Wunschliste. Mit „Automatisch“ wird nicht weitergeleitet. Klicke auf „Anwenden“, um zu speichern und sofort weiterzuleiten.',
             aboutTip: 'Alles ansehen, was dieses Skript macht.',
             ggTip: 'Sucht den Titel auf GG.deals mit dem DRM-Filter des Microsoft Store. Da es eine Titelsuche ist, wird nicht immer das exakte Spiel getroffen.',
-            pcgwTip: 'Sucht den Titel auf PCGamingWiki (Kompatibilität und Fixes), ohne den Editionszusatz. Da es eine Titelsuche ist, wird nicht immer der exakte Artikel getroffen, und DLC haben keine eigene Seite.',
+            pcgwTip: 'Sucht auf PCGamingWiki (Kompatibilität und Fixes) nach dem Spiel selbst: ohne Editions-Zusatz und bei DLC und Paketen nach dem Hauptspiel. Da nach dem Namen gesucht wird, trifft es nicht immer den genauen Artikel.',
             aboutTitle: 'Was macht dieses Skript?',
             aboutName: 'Name:',
             aboutVersion: 'Version:',
@@ -172,14 +172,14 @@
                 '– Link kopieren: baut eine URL, die deine Sortierung und Filter wiederherstellt. Blockiert der Browser die Zwischenablage, wird die URL in einem Dialog zum Abschreiben angezeigt.',
                 '• Auf Produktseiten kommen Schaltflächen zu GG.deals (Preise/Angebote) und PCGamingWiki (Kompatibilität und Fixes) dazu.',
                 '– Nur bei auf dem PC spielbaren Titeln. Ein reines Konsolenprodukt bekommt keine; Xbox Play Anywhere schon, weil das den PC einschließt.',
-                '– DLC, Editionen und Pakete bekommen sie auch. Dort treffen die Suchen seltener (PCGamingWiki dokumentiert das Basisspiel und hat keine DLC-Seiten), aber jede Schaltfläche weist in ihrem Tooltip schon darauf hin, dass sie nach dem Namen sucht. Keine Schaltflächen bekommen Apps und Abonnements, die keine Spielprodukte sind.',
+                '– DLC, Editionen und Pakete bekommen sie auch, und dort sucht PCGamingWiki nach dem Hauptspiel, denn dort dokumentiert es sie. Keine Buttons bekommen Apps und Abos, die keine Spielprodukte sind.',
                 '– Die Plattform wird aus der Seite selbst gelesen, aus der Liste „Spielbar auf“, die Xbox nicht übersetzt.',
                 '– Der Name wird beim öffentlichen Katalog von Microsoft angefragt und im localStorage behalten, um die Abfrage nicht zu wiederholen. Nötig ist das, weil nach dem englischen Namen gesucht wird und nicht nach dem Titel, den du siehst: die Seite ist übersetzt, die URL eingeschlossen, und beide Zielsites sind auf Englisch indexiert. Antwortet der Katalog nicht, werden keine Schaltflächen gesetzt.',
                 '– Beim Springen von einer Seite zur nächsten ohne Neuladen braucht das, was auf dem Bildschirm steht, einen Moment; solange das angezeigte Spiel nicht dem in der Adresse entspricht, wird nichts gesetzt, damit nie die Plattform des einen Spiels mit dem Namen eines anderen zusammenkommt.',
                 '– Das Skript lädt im ganzen Store, um diese Sprünge mitzubekommen, woher sie auch kommen (aus dem Katalog, aus einer Suche), denn Xbox wechselt die Seite ohne Neuladen und so erscheinen die Schaltflächen, ohne dass du neu laden musst. Außerhalb der Spielseiten und der Wunschliste zeichnet es nichts: das Einzige, was es im übrigen Store tut, ist die Regionsweiterleitung.',
                 '– GG.deals öffnet sich bereits auf das DRM des Microsoft Store gefiltert, genauso wie es die Skripte für Steam, GOG und Epic mit ihrem tun, und ohne die standardmäßige Mindestbewertung, die einen Teil der Angebote verbirgt.',
                 '– Das „(PC)“, das Microsoft an den Namen hängt, wenn dasselbe Spiel eine PC- und eine Konsolenseite hat, wird entfernt, da es nicht zum Titel gehört und keines der beiden Ziele es führt.',
-                '– GG.deals bekommt den vollständigen Titel samt Edition (und ohne Akzente, da es seinen Index transliteriert); PCGamingWiki bekommt ihn ohne Verpackungszusätze (Standard, Deluxe, Premium …), weil es das Basisspiel dokumentiert. Die, die wirklich eigene Veröffentlichungen sind (Definitive, Anniversary, Special, Remastered), bleiben unangetastet.',
+                '– GG.deals bekommt den vollen Titel samt Edition (und ohne Akzente, da der Index transliteriert wird); PCGamingWiki bekommt das Spiel selbst: ohne Verpackungs-Zusätze (Standard, Deluxe, Premium…) und bei einem DLC oder einer Edition den Namen des Hauptspiels, den Microsoft als Produktgruppe aller SKUs eines Spiels veröffentlicht. Diese Gruppe wird nur verwendet, wenn sie wirklich im Titel vorkommt: manchmal ist es ein interner Name ("Boost" bei Devil May Cry 5 Special Edition), und danach zu suchen wäre schlechter als gar nichts. Echte eigenständige Veröffentlichungen (Definitive, Anniversary, Special, Remastered) bleiben unangetastet.',
                 'Die Länder-/Sprachwahl wird in einem Cookie von xbox.com gespeichert, damit sie im ganzen Store gilt und nicht nur im aktuellen Tab; der Rest landet im localStorage. Die einzige externe Anfrage geht an den öffentlichen Katalog von Microsoft, um den englischen Namen des Spiels zu erfahren, das du gerade ansiehst: gesendet wird nur die Produktkennung aus der URL, ohne Cookies und ohne Sitzung, und die Antwort wird im localStorage abgelegt. An Dritte oder an den Autor wird nichts gesendet.'
             ]
         },
@@ -198,7 +198,7 @@
             regionTip: 'Choisissez la langue et le pays (paramètres régionaux) vers lesquels rediriger les pages Xbox : cela vaut pour toute la boutique — catalogue, recherches, fiches de jeu et cette liste de souhaits. Avec « Auto », aucune redirection. Cliquez sur « Appliquer » pour enregistrer et rediriger tout de suite.',
             aboutTip: 'Voir tout ce que fait ce script.',
             ggTip: 'Recherche le titre sur GG.deals avec le filtre DRM du Microsoft Store. S’agissant d’une recherche par titre, le jeu exact peut ne pas être trouvé.',
-            pcgwTip: 'Recherche le titre sur PCGamingWiki (compatibilité et correctifs), sans le suffixe d’édition. S’agissant d’une recherche par titre, l’article exact peut ne pas être trouvé, et les DLC n’ont pas de page propre.',
+            pcgwTip: 'Recherche sur PCGamingWiki (compatibilité et correctifs) le jeu lui-même : sans le suffixe d\'édition et, pour les DLC et les packs, par leur jeu de base. S\'agissant d\'une recherche par nom, elle peut ne pas tomber sur l\'article exact.',
             aboutTitle: 'Que fait ce script ?',
             aboutName: 'Nom :',
             aboutVersion: 'Version :',
@@ -219,14 +219,14 @@
                 '– Copier le lien : construit une URL qui reproduit votre tri et vos filtres. Si le navigateur bloque le presse-papiers, l’URL s’affiche dans une boîte de dialogue pour la copier à la main.',
                 '• Sur les fiches produit, il ajoute des boutons vers GG.deals (prix/promotions) et PCGamingWiki (compatibilité et correctifs).',
                 '– Uniquement pour ce qui est jouable sur PC. Un produit console seulement n’en reçoit pas ; Xbox Play Anywhere si, car cela implique le PC.',
-                '– Les DLC, éditions et packs en reçoivent aussi. Les recherches y aboutissent moins souvent (PCGamingWiki documente le jeu de base et n’a pas de pages de DLC), mais chaque bouton précise déjà dans son infobulle qu’il cherche par nom. Ce qui ne reçoit pas de boutons, ce sont les applications et les abonnements, qui ne sont pas des produits de jeu.',
+                '– Les DLC, éditions et packs en reçoivent aussi, et là PCGamingWiki cherche le jeu de base, car c\'est là qu\'il les documente. Ce qui n\'en reçoit pas, ce sont les applis et les abonnements, qui ne sont pas des produits de jeu.',
                 '– La plateforme est lue sur la fiche elle-même, dans la liste « Jouer avec », que Xbox ne traduit pas.',
                 '– Le nom est demandé au catalogue public de Microsoft et conservé dans localStorage pour ne pas répéter l’appel. C’est nécessaire parce que la recherche se fait sur le nom anglais et non sur le titre que vous voyez : la fiche est traduite, URL comprise, et les deux sites sont indexés en anglais. Si le catalogue ne répond pas, aucun bouton n’est ajouté.',
                 '– En passant d’une fiche à l’autre sans recharger, ce qui est à l’écran met un instant à changer ; tant que le jeu affiché ne correspond pas à celui de l’adresse, rien n’est ajouté, pour ne jamais associer la plateforme d’un jeu au nom d’un autre.',
                 '– Le script se charge sur toute la boutique afin de repérer ces sauts d’où qu’ils viennent (du catalogue, d’une recherche), car Xbox change de page sans recharger et les boutons apparaissent ainsi sans que vous ayez à recharger. En dehors des fiches et de la liste de souhaits, il n’affiche rien : la seule chose qu’il fait ailleurs dans la boutique, c’est la redirection de région.',
                 '– GG.deals s’ouvre déjà filtré sur le DRM du Microsoft Store, comme le font les scripts Steam, GOG et Epic avec le leur, et sans la note minimale de boutique appliquée par défaut qui masque une partie des offres.',
                 '– Le « (PC) » que Microsoft accole au nom lorsque le même jeu a une fiche PC et une fiche console est retiré, car il ne fait pas partie du titre et aucune des deux destinations ne le porte.',
-                '– GG.deals reçoit le titre complet, édition comprise (et sans accents, puisqu’il translittère son index) ; PCGamingWiki le reçoit sans suffixes d’emballage (Standard, Deluxe, Premium…), car il documente le jeu de base. Ceux qui sont de véritables sorties distinctes (Definitive, Anniversary, Special, Remastered) sont laissés tels quels.',
+                '– GG.deals reçoit le titre complet, édition comprise (et sans accents, puisqu\'il translittère son index) ; PCGamingWiki reçoit le jeu lui-même : sans suffixe d\'édition (Standard, Deluxe, Premium…) et, pour un DLC ou une édition, par son jeu de base, que Microsoft publie comme le groupe de produit partagé par tous les SKU d\'un même jeu. Ce groupe n\'est utilisé que s\'il figure réellement dans le titre : c\'est parfois un nom interne ("Boost" pour Devil May Cry 5 Special Edition) et le chercher serait pire que de ne rien faire. Les vraies sorties distinctes (Definitive, Anniversary, Special, Remastered) sont laissées telles quelles.',
                 'La préférence de pays et de langue est stockée dans un cookie de xbox.com, pour qu’elle vaille sur toute la boutique et pas seulement dans l’onglet en cours ; le reste passe par localStorage. La seule requête externe va au catalogue public de Microsoft, afin de connaître le nom anglais du jeu que vous consultez : seul l’identifiant de produit présent dans l’URL est envoyé, sans cookies ni session, et la réponse est conservée dans localStorage. Rien n’est envoyé à des tiers ni à l’auteur.'
             ]
         },
@@ -245,7 +245,7 @@
             regionTip: 'Scegli la lingua e il paese (impostazioni internazionali) verso cui reindirizzare le pagine Xbox: vale per tutto il negozio — catalogo, ricerche, schede di gioco e questa lista dei desideri. Con «Auto» non reindirizza. Premi «Applica» per salvare e reindirizzare subito.',
             aboutTip: 'Vedi tutto quello che fa questo script.',
             ggTip: 'Cerca il titolo su GG.deals con il filtro DRM del Microsoft Store. Trattandosi di una ricerca per titolo, potrebbe non trovare il gioco esatto.',
-            pcgwTip: 'Cerca il titolo su PCGamingWiki (compatibilità e correzioni), senza il suffisso di edizione. Trattandosi di una ricerca per titolo potrebbe non trovare la voce esatta, e i DLC non hanno una pagina propria.',
+            pcgwTip: 'Cerca su PCGamingWiki (compatibilità e correzioni) il gioco vero e proprio: senza il suffisso di edizione e, per DLC e pacchetti, tramite il gioco base. Trattandosi di una ricerca per nome, potrebbe non trovare l\'articolo esatto.',
             aboutTitle: 'Che cosa fa questo script?',
             aboutName: 'Nome:',
             aboutVersion: 'Versione:',
@@ -266,14 +266,14 @@
                 '– Copia link: genera un URL che riproduce ordinamento e filtri. Se il browser blocca gli appunti, l’URL viene mostrato in una finestra per copiarlo a mano.',
                 '• Nelle schede di prodotto aggiunge pulsanti verso GG.deals (prezzi/offerte) e PCGamingWiki (compatibilità e correzioni).',
                 '– Solo per ciò che è giocabile su PC. Un prodotto solo per console non li riceve; Xbox Play Anywhere sì, perché implica il PC.',
-                '– Anche DLC, edizioni e pacchetti li ricevono. Lì le ricerche azzeccano meno (PCGamingWiki documenta il gioco base e non ha pagine per i DLC), ma ogni pulsante avverte già nel proprio tooltip che cerca per nome. A non ricevere pulsanti sono le app e gli abbonamenti, che non sono prodotti di gioco.',
+                '– Anche DLC, edizioni e pacchetti li ricevono, e lì PCGamingWiki cerca il gioco base, che è dove li documenta. A non riceverli sono le app e gli abbonamenti, che non sono prodotti di gioco.',
                 '– La piattaforma si legge dalla scheda stessa, dall’elenco «Gioca con», che Xbox non traduce.',
                 '– Il nome viene chiesto al catalogo pubblico di Microsoft e conservato in localStorage per non ripetere la chiamata. Serve perché la ricerca usa il nome inglese e non il titolo che vedi: la scheda è tradotta, URL compreso, ed entrambi i siti sono indicizzati in inglese. Se il catalogo non risponde, i pulsanti non vengono messi.',
                 '– Saltando da una scheda all’altra senza ricaricare, ciò che è a schermo impiega un attimo a cambiare; finché il gioco mostrato non coincide con quello dell’indirizzo non viene messo nulla, per non accoppiare mai la piattaforma di un gioco con il nome di un altro.',
                 '– Lo script si carica su tutto il negozio per accorgersi di quei salti da qualunque parte arrivino (dal catalogo, da una ricerca), perché Xbox cambia pagina senza ricaricare e così i pulsanti compaiono senza che tu debba ricaricare. Fuori dalle schede e dalla lista dei desideri non disegna nulla: l’unica cosa che fa nel resto del negozio è il reindirizzamento di regione.',
                 '– GG.deals si apre già filtrato sul DRM del Microsoft Store, come fanno gli script di Steam, GOG ed Epic con il proprio, e senza la valutazione minima applicata per impostazione predefinita che nasconde parte delle offerte.',
                 '– Il «(PC)» che Microsoft appiccica al nome quando lo stesso gioco ha una scheda PC e una console viene tolto, perché non fa parte del titolo e nessuna delle due destinazioni lo riporta.',
-                '– GG.deals riceve il titolo completo, edizione inclusa (e senza accenti, perché translittera il suo indice); PCGamingWiki lo riceve senza suffissi di confezionamento (Standard, Deluxe, Premium…), perché documenta il gioco base. Quelli che sono davvero uscite a sé (Definitive, Anniversary, Special, Remastered) restano intatti.',
+                '– GG.deals riceve il titolo completo, edizione inclusa (e senza accenti, perché traslittera il suo indice); PCGamingWiki riceve il gioco vero e proprio: senza suffissi di edizione (Standard, Deluxe, Premium…) e, per un DLC o un\'edizione, tramite il gioco base, che Microsoft pubblica come gruppo di prodotto condiviso da tutti gli SKU di uno stesso gioco. Quel gruppo si usa solo se compare davvero nel titolo: a volte è un nome interno ("Boost" per Devil May Cry 5 Special Edition) e cercarlo sarebbe peggio che non fare nulla. Le uscite realmente separate (Definitive, Anniversary, Special, Remastered) restano intatte.',
                 'La preferenza di paese e lingua è salvata in un cookie di xbox.com, perché valga in tutto il negozio e non solo nella scheda corrente; il resto va in localStorage. L’unica richiesta esterna è al catalogo pubblico di Microsoft, per sapere il nome inglese del gioco che stai guardando: si manda solo il codice di prodotto dell’URL, senza cookie né sessione, e la risposta viene salvata in localStorage. Non si invia nulla a terzi né all’autore.'
             ]
         },
@@ -292,7 +292,7 @@
             regionTip: 'Kies de taal en het land (landinstelling) waarnaar Xbox-pagina’s worden omgeleid: het geldt voor de hele winkel — catalogus, zoekopdrachten, gamepagina’s en deze verlanglijst. Met "Auto" wordt er niet omgeleid. Klik op "Toepassen" om op te slaan en meteen om te leiden.',
             aboutTip: 'Bekijk alles wat dit script doet.',
             ggTip: 'Zoekt de titel op GG.deals met het DRM-filter van de Microsoft Store. Omdat het een titelzoekopdracht is, wordt niet altijd het exacte spel gevonden.',
-            pcgwTip: 'Zoekt de titel op PCGamingWiki (compatibiliteit en fixes), zonder het editiesuffix. Omdat het een titelzoekopdracht is wordt niet altijd het exacte artikel gevonden, en DLC hebben geen eigen pagina.',
+            pcgwTip: 'Zoekt op PCGamingWiki (compatibiliteit en fixes) naar het spel zelf: zonder het editiesuffix en, bij DLC en pakketten, op het basisspel. Omdat het op naam zoekt, vindt het niet altijd het juiste artikel.',
             aboutTitle: 'Wat doet dit script?',
             aboutName: 'Naam:',
             aboutVersion: 'Versie:',
@@ -313,14 +313,14 @@
                 '– Link kopiëren: maakt een URL die je sortering en filters herstelt. Blokkeert de browser het klembord, dan wordt de URL in een dialoogvenster getoond om hem met de hand te kopiëren.',
                 '• Op productpagina’s voegt het knoppen toe naar GG.deals (prijzen/aanbiedingen) en PCGamingWiki (compatibiliteit en fixes).',
                 '– Alleen voor wat op de pc speelbaar is. Een product dat alleen voor console is krijgt ze niet; Xbox Play Anywhere wel, want dat impliceert pc.',
-                '– DLC, edities en pakketten krijgen ze ook. Daar treffen de zoekopdrachten minder vaak doel (PCGamingWiki documenteert het basisspel en heeft geen DLC-pagina’s), maar elke knop meldt in zijn tooltip al dat hij op naam zoekt. Wat geen knoppen krijgt zijn apps en abonnementen, die geen gameproducten zijn.',
+                '– DLC, edities en pakketten krijgen ze ook, en daar zoekt PCGamingWiki het basisspel, want daar documenteert het ze. Wat geen knoppen krijgt zijn apps en abonnementen, die geen spelproduct zijn.',
                 '– Het platform wordt van de pagina zelf gelezen, uit de lijst "Speel met", die Xbox niet vertaalt.',
                 '– De naam wordt opgevraagd bij de openbare catalogus van Microsoft en in localStorage bewaard om de aanroep niet te herhalen. Dat is nodig omdat er op de Engelse naam wordt gezocht en niet op de titel die je ziet: de pagina is vertaald, de URL inbegrepen, en beide sites zijn in het Engels geïndexeerd. Antwoordt de catalogus niet, dan worden er geen knoppen geplaatst.',
                 '– Als je zonder herladen van de ene pagina naar de andere springt, duurt het even voor wat op het scherm staat verandert; zolang het getoonde spel niet overeenkomt met dat in het adres wordt er niets geplaatst, zodat het platform van het ene spel nooit met de naam van een ander wordt gecombineerd.',
                 '– Het script laadt in de hele winkel om die sprongen op te merken waar ze ook vandaan komen (uit de catalogus, uit een zoekopdracht), want Xbox wisselt van pagina zonder te herladen en zo verschijnen de knoppen zonder dat jij hoeft te herladen. Buiten de gamepagina’s en de verlanglijst tekent het niets: het enige wat het elders in de winkel doet is de regio-omleiding.',
                 '– GG.deals opent al gefilterd op het DRM van de Microsoft Store, net zoals de scripts voor Steam, GOG en Epic dat met het hunne doen, en zonder de standaard minimale winkelbeoordeling die een deel van de aanbiedingen verbergt.',
                 '– De "(PC)" die Microsoft aan de naam hangt wanneer hetzelfde spel zowel een pc- als een consolepagina heeft, wordt weggehaald, want die hoort niet bij de titel en geen van beide bestemmingen voert hem.',
-                '– GG.deals krijgt de volledige titel, editie inbegrepen (en zonder accenten, omdat het zijn index translitereert); PCGamingWiki krijgt hem zonder verpakkingssuffixen (Standard, Deluxe, Premium…), omdat het het basisspel documenteert. Die welke echt aparte uitgaven zijn (Definitive, Anniversary, Special, Remastered) blijven ongemoeid.',
+                '– GG.deals krijgt de volledige titel, editie inbegrepen (en zonder accenten, omdat het zijn index translitereert); PCGamingWiki krijgt het spel zelf: zonder verpakkingssuffixen (Standard, Deluxe, Premium…) en, bij een DLC of editie, via het basisspel, dat Microsoft publiceert als de productgroep die alle SKU\'s van één spel delen. Die groep wordt alleen gebruikt als hij echt in de titel voorkomt: soms is het een interne naam ("Boost" bij Devil May Cry 5 Special Edition) en daarop zoeken zou slechter zijn dan niets doen. Echt losse uitgaven (Definitive, Anniversary, Special, Remastered) blijven ongemoeid.',
                 'De land-/taalvoorkeur wordt bewaard in een cookie van xbox.com, zodat die voor de hele winkel geldt en niet alleen voor het huidige tabblad; de rest gaat naar localStorage. Het enige externe verzoek gaat naar de openbare catalogus van Microsoft, om de Engelse naam te weten te komen van het spel dat je bekijkt: alleen de productcode uit de URL wordt verstuurd, zonder cookies of sessie, en het antwoord wordt in localStorage bewaard. Er wordt niets naar derden of naar de auteur gestuurd.'
             ]
         },
@@ -339,7 +339,7 @@
             regionTip: 'Escolha o idioma e o país (região) para onde redirecionar as páginas da Xbox: vale para toda a loja — catálogo, pesquisas, fichas de jogo e esta lista de desejos. Com "Automático" não redireciona. Prima "Aplicar" para guardar e redirecionar já.',
             aboutTip: 'Ver tudo o que este script faz.',
             ggTip: 'Procura o título no GG.deals com o filtro de DRM da Microsoft Store. Sendo uma pesquisa por título, pode não encontrar o jogo exato.',
-            pcgwTip: 'Procura o título no PCGamingWiki (compatibilidade e correções), sem o sufixo de edição. Sendo uma pesquisa por título pode não encontrar o artigo exato, e os DLC não têm página própria.',
+            pcgwTip: 'Procura no PCGamingWiki (compatibilidade e correções) o próprio jogo: sem o sufixo de edição e, em DLC e pacotes, pelo jogo base. Sendo uma pesquisa por nome, pode não encontrar o artigo exato.',
             aboutTitle: 'O que faz este script?',
             aboutName: 'Nome:',
             aboutVersion: 'Versão:',
@@ -360,14 +360,14 @@
                 '– Copiar ligação: gera um URL que reproduz a sua ordenação e filtros. Se o navegador bloquear a área de transferência, mostra o URL numa caixa de diálogo para o copiar à mão.',
                 '• Nas fichas de produto acrescenta botões para o GG.deals (preços/promoções) e o PCGamingWiki (compatibilidade e correções).',
                 '– Só no que é jogável em PC. Um produto apenas de consola não os recebe; o Xbox Play Anywhere sim, porque implica PC.',
-                '– Também em DLC, edições e pacotes. Aí as pesquisas acertam menos (o PCGamingWiki documenta o jogo base e não tem páginas de DLC), mas cada botão já avisa na sua dica de que procura por nome. O que não recebe botões são as aplicações e as subscrições, que não são produtos de jogo.',
+                '– DLC, edições e pacotes também os recebem, e aí o PCGamingWiki procura o jogo base, que é onde os documenta. O que não recebe botões são as apps e as subscrições, que não são produto de jogo.',
                 '– A plataforma é lida da própria ficha, da lista "Jogar com", que a Xbox não traduz.',
                 '– O nome é pedido ao catálogo público da Microsoft e guardado em localStorage para não repetir a consulta. É necessário porque a pesquisa usa o nome em inglês e não o título que vê: a ficha está traduzida, incluindo o URL, e ambos os sites estão indexados em inglês. Se o catálogo não responder, não são colocados botões.',
                 '– Ao saltar de uma ficha para outra sem recarregar, o que está no ecrã demora um momento a mudar; enquanto o jogo apresentado não coincidir com o do endereço não é colocado nada, para nunca juntar a plataforma de um jogo com o nome de outro.',
                 '– O script carrega em toda a loja para dar conta desses saltos venham de onde vierem (do catálogo, de uma pesquisa), porque a Xbox muda de página sem recarregar e assim os botões aparecem sem que tenha de recarregar. Fora das fichas e da lista de desejos não desenha nada: a única coisa que faz no resto da loja é o redirecionamento de região.',
                 '– O GG.deals abre já filtrado pelo DRM da Microsoft Store, tal como os scripts da Steam, GOG e Epic fazem com o seu, e sem a classificação mínima aplicada por omissão que esconde parte das ofertas.',
                 '– O "(PC)" que a Microsoft acrescenta ao nome quando o mesmo jogo tem ficha de PC e de consola é removido, porque não faz parte do título e nenhum dos dois destinos o inclui.',
-                '– O GG.deals recebe o título completo, com a sua edição (e sem acentos, porque translitera o seu índice); o PCGamingWiki recebe-o sem sufixos de empacotamento (Standard, Deluxe, Premium…), porque documenta o jogo base. Os que são mesmo lançamentos à parte (Definitive, Anniversary, Special, Remastered) ficam tal como estão.',
+                '– O GG.deals recebe o título completo, com a edição (e sem acentos, porque translitera o seu índice); o PCGamingWiki recebe o próprio jogo: sem sufixos de embalagem (Standard, Deluxe, Premium…) e, num DLC ou numa edição, pelo jogo base, que a Microsoft publica como o grupo de produto partilhado por todos os SKU de um mesmo jogo. Esse grupo só é usado se realmente aparecer dentro do título: às vezes é um nome interno ("Boost" em Devil May Cry 5 Special Edition) e procurar isso seria pior do que não mexer em nada. Os que são mesmo lançamentos à parte (Definitive, Anniversary, Special, Remastered) ficam como estão.',
                 'A preferência de país e idioma é guardada num cookie de xbox.com, para valer em toda a loja e não só no separador atual; o resto vai para localStorage. O único pedido externo é ao catálogo público da Microsoft, para saber o nome em inglês do jogo que está a ver: envia-se apenas o código de produto do URL, sem cookies nem sessão, e a resposta é guardada em localStorage. Não se envia nada a terceiros nem ao autor.'
             ]
         },
@@ -386,7 +386,7 @@
             regionTip: 'Wybierz język i kraj (ustawienia regionalne), do których mają być przekierowywane strony Xbox: obowiązuje w całym sklepie — katalog, wyszukiwanie, strony gier i ta lista życzeń. Przy „Auto” nie przekierowuje. Kliknij „Zastosuj”, aby zapisać i przekierować od razu.',
             aboutTip: 'Zobacz wszystko, co robi ten skrypt.',
             ggTip: 'Wyszukuje tytuł w GG.deals z filtrem DRM Microsoft Store. Ponieważ to wyszukiwanie po tytule, może nie trafić w dokładną grę.',
-            pcgwTip: 'Wyszukuje tytuł w PCGamingWiki (zgodność i poprawki), bez końcówki edycji. Ponieważ to wyszukiwanie po tytule, może nie trafić w dokładny artykuł, a dodatki DLC nie mają własnej strony.',
+            pcgwTip: 'Szuka w PCGamingWiki (zgodność i poprawki) samej gry: bez dopisku edycji, a w przypadku DLC i pakietów — po grze podstawowej. Ponieważ to wyszukiwanie po nazwie, może nie trafić w dokładny artykuł.',
             aboutTitle: 'Co robi ten skrypt?',
             aboutName: 'Nazwa:',
             aboutVersion: 'Wersja:',
@@ -407,14 +407,14 @@
                 '– Kopiuj link: tworzy adres URL odtwarzający twoje sortowanie i filtry. Jeśli przeglądarka zablokuje schowek, adres pojawi się w oknie dialogowym do ręcznego skopiowania.',
                 '• Na stronach produktów dodaje przyciski do GG.deals (ceny/promocje) i PCGamingWiki (zgodność i poprawki).',
                 '– Tylko przy tym, w co da się grać na PC. Produkt wyłącznie konsolowy ich nie dostaje; Xbox Play Anywhere tak, bo oznacza także PC.',
-                '– Dodatki DLC, edycje i pakiety też je dostają. Tam wyszukiwanie trafia rzadziej (PCGamingWiki opisuje grę podstawową i nie ma stron dla DLC), ale każdy przycisk uprzedza w swojej podpowiedzi, że szuka po nazwie. Przycisków nie dostają aplikacje i subskrypcje, które nie są produktami growymi.',
+                '– DLC, edycje i pakiety też je dostają, a tam PCGamingWiki szuka gry podstawowej, bo właśnie w niej je opisuje. Przycisków nie dostają aplikacje i abonamenty, które nie są produktem growym.',
                 '– Platforma jest odczytywana z samej strony, z listy „Zagraj na”, której Xbox nie tłumaczy.',
                 '– Nazwa jest pobierana z publicznego katalogu Microsoftu i przechowywana w localStorage, żeby nie powtarzać zapytania. Jest potrzebna, bo szuka się po nazwie angielskiej, a nie po tytule, który widzisz: strona jest przetłumaczona, łącznie z adresem, a oba serwisy są zindeksowane po angielsku. Jeśli katalog nie odpowie, przyciski nie zostaną dodane.',
                 '– Przy przeskakiwaniu między stronami bez przeładowania to, co jest na ekranie, zmienia się z opóźnieniem; dopóki pokazywana gra nie zgadza się z tą z adresu, nic nie jest dodawane, żeby nigdy nie połączyć platformy jednej gry z nazwą innej.',
                 '– Skrypt ładuje się w całym sklepie, żeby wychwycić te przeskoki, skądkolwiek pochodzą (z katalogu, z wyszukiwania), bo Xbox zmienia strony bez przeładowania i dzięki temu przyciski pojawiają się bez przeładowywania przez ciebie. Poza stronami gier i listą życzeń nic nie rysuje: jedyne, co robi w reszcie sklepu, to przekierowanie regionu.',
                 '– GG.deals otwiera się już przefiltrowany po DRM Microsoft Store, tak samo jak skrypty Steam, GOG i Epic robią ze swoim, i bez domyślnego progu ocen sklepów, który ukrywa część ofert.',
                 '– Dopisek „(PC)”, który Microsoft dokleja do nazwy, gdy ta sama gra ma stronę pecetową i konsolową, jest usuwany, bo nie należy do tytułu i żaden z serwisów go nie stosuje.',
-                '– GG.deals dostaje pełny tytuł wraz z edycją (i bez znaków diakrytycznych, bo transliteruje swój indeks); PCGamingWiki dostaje go bez końcówek wydań (Standard, Deluxe, Premium…), bo opisuje grę podstawową. Te, które naprawdę są osobnymi premierami (Definitive, Anniversary, Special, Remastered), zostają nienaruszone.',
+                '– GG.deals dostaje pełny tytuł wraz z edycją (i bez znaków diakrytycznych, bo transliteruje swój indeks); PCGamingWiki dostaje samą grę: bez dopisków edycji (Standard, Deluxe, Premium…), a przy DLC lub edycji — nazwę gry podstawowej, którą Microsoft publikuje jako grupę produktu wspólną dla wszystkich SKU jednej gry. Ta grupa jest używana tylko wtedy, gdy naprawdę występuje w tytule: bywa nazwą wewnętrzną ("Boost" przy Devil May Cry 5 Special Edition), a szukanie jej byłoby gorsze niż nierobienie niczego. Naprawdę osobne wydania (Definitive, Anniversary, Special, Remastered) zostają nietknięte.',
                 'Preferencja kraju i języka jest zapisywana w ciasteczku xbox.com, żeby obowiązywała w całym sklepie, a nie tylko w bieżącej karcie; reszta trafia do localStorage. Jedyne zapytanie na zewnątrz idzie do publicznego katalogu Microsoftu, żeby poznać angielską nazwę oglądanej gry: wysyłany jest wyłącznie identyfikator produktu z adresu, bez ciasteczek i bez sesji, a odpowiedź zapisywana jest w localStorage. Nic nie jest wysyłane do osób trzecich ani do autora.'
             ]
         },
@@ -433,7 +433,7 @@
             regionTip: 'Выберите язык и страну, на которые перенаправлять страницы Xbox: это действует во всём магазине — каталог, поиск, страницы игр и этот список желаемого. При «Авто» перенаправления нет. Нажмите «Применить», чтобы сохранить и перенаправить сразу.',
             aboutTip: 'Посмотреть всё, что делает этот скрипт.',
             ggTip: 'Ищет название на GG.deals с фильтром DRM Microsoft Store. Это поиск по названию, поэтому нужная игра может не найтись.',
-            pcgwTip: 'Ищет название на PCGamingWiki (совместимость и исправления), без суффикса издания. Это поиск по названию, поэтому нужная статья может не найтись, а у дополнений нет своей страницы.',
+            pcgwTip: 'Ищет в PCGamingWiki (совместимость и исправления) саму игру: без суффикса издания, а для DLC и наборов — по базовой игре. Это поиск по названию, поэтому он может не попасть в нужную статью.',
             aboutTitle: 'Что делает этот скрипт?',
             aboutName: 'Название:',
             aboutVersion: 'Версия:',
@@ -454,14 +454,14 @@
                 '– Скопировать ссылку: формирует адрес, воспроизводящий вашу сортировку и фильтры. Если браузер блокирует буфер обмена, адрес показывается в диалоге для копирования вручную.',
                 '• На страницах товара добавляются кнопки на GG.deals (цены и скидки) и PCGamingWiki (совместимость и исправления).',
                 '– Только для того, во что можно играть на ПК. Товар только для консоли их не получает; Xbox Play Anywhere получает, поскольку подразумевает ПК.',
-                '– Дополнения, издания и наборы тоже их получают. Там поиск попадает реже (PCGamingWiki описывает базовую игру и не имеет страниц для дополнений), но каждая кнопка уже предупреждает в подсказке, что ищет по названию. Кнопок не получают приложения и подписки: это не игровые товары.',
+                '– DLC, издания и наборы тоже их получают, и там PCGamingWiki ищет базовую игру — именно в ней он их и описывает. Кнопок не получают приложения и подписки: это не игровые продукты.',
                 '– Платформа читается с самой страницы, из списка «Играть на», который Xbox не переводит.',
                 '– Название запрашивается у публичного каталога Microsoft и сохраняется в localStorage, чтобы не повторять запрос. Это нужно потому, что поиск идёт по английскому названию, а не по тому заголовку, который вы видите: страница переведена, включая адрес, а оба сайта проиндексированы на английском. Если каталог не отвечает, кнопки не ставятся.',
                 '– При переходе с одной страницы на другую без перезагрузки то, что на экране, меняется не сразу; пока показанная игра не совпадёт с той, что в адресе, ничего не ставится, чтобы платформа одной игры никогда не соединилась с названием другой.',
                 '– Скрипт загружается во всём магазине, чтобы замечать эти переходы, откуда бы они ни шли (из каталога, из поиска), потому что Xbox меняет страницы без перезагрузки и так кнопки появляются без перезагрузки с вашей стороны. Вне страниц игр и списка желаемого он ничего не рисует: единственное, что он делает в остальном магазине, — перенаправление региона.',
                 '– GG.deals открывается уже отфильтрованным по DRM Microsoft Store, так же как скрипты для Steam, GOG и Epic делают со своим, и без минимального рейтинга магазинов по умолчанию, который скрывает часть предложений.',
                 '– «(PC)», который Microsoft добавляет к названию, когда у одной и той же игры есть страница для ПК и для консоли, убирается: это не часть заголовка, и ни один из двух сайтов его не использует.',
-                '– GG.deals получает полное название вместе с изданием (и без диакритики, поскольку он транслитерирует свой индекс); PCGamingWiki получает его без суффиксов комплектации (Standard, Deluxe, Premium…), потому что описывает базовую игру. Те, что действительно являются отдельными выпусками (Definitive, Anniversary, Special, Remastered), остаются как есть.',
+                '– GG.deals получает полное название вместе с изданием (и без диакритики, потому что его индекс транслитерирует); PCGamingWiki получает саму игру: без суффиксов издания (Standard, Deluxe, Premium…), а для DLC или издания — название базовой игры, которое Microsoft публикует как группу продукта, общую для всех SKU одной игры. Эта группа берётся, только если она действительно встречается в названии: иногда это внутреннее имя ("Boost" у Devil May Cry 5 Special Edition), и искать его было бы хуже, чем не трогать ничего. Действительно отдельные издания (Definitive, Anniversary, Special, Remastered) остаются как есть.',
                 'Выбор страны и языка хранится в cookie домена xbox.com, чтобы действовать во всём магазине, а не только в текущей вкладке; остальное хранится в localStorage. Единственный внешний запрос идёт к публичному каталогу Microsoft, чтобы узнать английское название игры, которую вы смотрите: отправляется только код товара из адреса, без cookie и без сессии, а ответ сохраняется в localStorage. Ничего не отправляется ни третьим лицам, ни автору.'
             ]
         },
@@ -480,7 +480,7 @@
             regionTip: 'Xbox sayfalarının yönlendirileceği dil ve ülkeyi (yerel ayar) seçin: mağazanın tamamında geçerlidir — katalog, aramalar, oyun sayfaları ve bu istek listesi. "Otomatik" seçiliyken yönlendirme yapmaz. Kaydedip hemen yönlendirmek için "Uygula"ya tıklayın.',
             aboutTip: 'Bu betiğin yaptığı her şeyi görün.',
             ggTip: 'Başlığı GG.deals üzerinde Microsoft Store DRM filtresiyle arar. Başlığa göre arama olduğu için tam olarak aradığınız oyunu bulamayabilir.',
-            pcgwTip: 'Başlığı PCGamingWiki üzerinde arar (uyumluluk ve düzeltmeler), sürüm ekini kullanmadan. Başlığa göre arama olduğu için tam makaleyi bulamayabilir ve ek paketlerin kendine ait sayfası yoktur.',
+            pcgwTip: 'PCGamingWiki\'de (uyumluluk ve düzeltmeler) oyunun kendisini arar: sürüm ekini kullanmadan, DLC ve paketlerde ise ana oyunun adıyla. Ada göre arama olduğu için tam makaleyi bulamayabilir.',
             aboutTitle: 'Bu betik ne yapar?',
             aboutName: 'Ad:',
             aboutVersion: 'Sürüm:',
@@ -501,14 +501,14 @@
                 '– Bağlantıyı kopyala: sıralamanızı ve filtrelerinizi geri getiren bir adres oluşturur. Tarayıcı panoyu engellerse adresi elle kopyalayabilmeniz için bir iletişim kutusunda gösterir.',
                 '• Ürün sayfalarında GG.deals (fiyatlar/fırsatlar) ve PCGamingWiki (uyumluluk ve düzeltmeler) düğmeleri ekler.',
                 '– Yalnızca PC’de oynanabilenlerde. Yalnızca konsola özel bir ürün bunları almaz; Xbox Play Anywhere alır, çünkü PC’yi de kapsar.',
-                '– Ek paketler, sürümler ve paketler de alır. Orada aramalar daha az isabet eder (PCGamingWiki ana oyunu belgeler ve ek paketler için sayfası yoktur), ama her düğme ipucunda ada göre aradığını zaten belirtir. Düğme almayanlar, oyun ürünü olmayan uygulamalar ve aboneliklerdir.',
+                '– DLC\'ler, sürümler ve paketler de alır; orada PCGamingWiki ana oyunu arar, çünkü onları orada belgeler. Düğme almayanlar, oyun ürünü olmayan uygulamalar ve aboneliklerdir.',
                 '– Platform, sayfanın kendisinden, Xbox’ın çevirmediği "Şununla oyna" listesinden okunur.',
                 '– Ad, Microsoft’un genel kataloğundan istenir ve isteği tekrarlamamak için localStorage’da tutulur. Buna gerek vardır çünkü arama gördüğünüz başlıkla değil, İngilizce adla yapılır: sayfa çevrilmiştir, adres dâhil, ve iki site de İngilizce dizinlenmiştir. Katalog yanıt vermezse düğmeler eklenmez.',
                 '– Sayfalar arasında yeniden yükleme olmadan geçerken ekrandakinin değişmesi bir an alır; gösterilen oyun adrestekiyle örtüşene kadar hiçbir şey eklenmez, böylece bir oyunun platformu asla başka bir oyunun adıyla eşleşmez.',
                 '– Betik, bu geçişleri nereden gelirse gelsin (katalogdan, bir aramadan) fark edebilmek için mağazanın tamamında yüklenir; çünkü Xbox sayfayı yeniden yüklemeden değiştirir ve böylece düğmeler siz yenilemeden çıkar. Oyun sayfaları ve istek listesi dışında hiçbir şey çizmez: mağazanın geri kalanında yaptığı tek şey bölge yönlendirmesidir.',
                 '– GG.deals, Steam, GOG ve Epic betiklerinin kendi DRM’leriyle yaptığı gibi, Microsoft Store DRM’ine göre süzülmüş olarak açılır ve fırsatların bir kısmını gizleyen varsayılan asgari mağaza puanı olmadan gelir.',
                 '– Aynı oyunun hem PC hem konsol sayfası olduğunda Microsoft’un ada eklediği "(PC)" ibaresi kaldırılır; başlığın parçası değildir ve iki hedef site de bunu kullanmaz.',
-                '– GG.deals tam başlığı sürümüyle birlikte alır (ve aksansız, çünkü dizinini harf çevirisiyle tutar); PCGamingWiki ise paketleme eklerinden arındırılmış hâlini alır (Standard, Deluxe, Premium…), çünkü ana oyunu belgeler. Gerçekten ayrı birer sürüm olanlar (Definitive, Anniversary, Special, Remastered) olduğu gibi bırakılır.',
+                '– GG.deals tam başlığı, sürümüyle birlikte alır (ve aksansız, çünkü dizinini harf çevirisiyle tutar); PCGamingWiki oyunun kendisini alır: paketleme ekleri olmadan (Standard, Deluxe, Premium…) ve bir DLC ya da sürüm söz konusuysa ana oyunun adıyla — Microsoft bunu, aynı oyunun tüm SKU\'larının paylaştığı ürün grubu olarak yayımlar. Bu grup yalnızca gerçekten başlığın içinde geçiyorsa kullanılır: bazen dahili bir addır (Devil May Cry 5 Special Edition için "Boost") ve onu aramak hiçbir şey yapmamaktan kötü olurdu. Gerçekten ayrı çıkışlar (Definitive, Anniversary, Special, Remastered) olduğu gibi bırakılır.',
                 'Ülke/dil tercihi bir xbox.com çerezinde saklanır; böylece yalnızca açık sekmede değil, mağazanın tamamında geçerli olur. Gerisi localStorage’a yazılır. Tek dış istek, baktığınız oyunun İngilizce adını öğrenmek için Microsoft’un genel kataloğuna gider: yalnızca adresteki ürün kodu gönderilir, çerezsiz ve oturumsuz, ve yanıt localStorage’a kaydedilir. Üçüncü taraflara veya yazara hiçbir şey gönderilmez.'
             ]
         },
@@ -527,7 +527,7 @@
             regionTip: 'Xbox のページをリダイレクトする言語・国（ロケール）を選びます。ストア全体（カタログ、検索、ゲームページ、このウィッシュリスト）で有効です。「自動」ではリダイレクトしません。「適用」を押すと保存してすぐにリダイレクトします。',
             aboutTip: 'このスクリプトの機能をすべて見る。',
             ggTip: 'GG.deals で Microsoft Store の DRM フィルターを使ってタイトルを検索します。タイトル検索のため、目的のゲームに正確に一致しない場合があります。',
-            pcgwTip: 'PCGamingWiki でタイトルを検索します（互換性と修正）。エディションの接尾辞は外します。タイトル検索のため目的の記事に一致しないことがあり、DLC には専用ページがありません。',
+            pcgwTip: 'PCGamingWiki（互換性と修正）でゲーム本体を検索します。エディション表記は外し、DLC やパックはベースゲーム名で検索します。名前による検索のため、正確な記事に届かないことがあります。',
             aboutTitle: 'このスクリプトは何をしますか？',
             aboutName: '名前:',
             aboutVersion: 'バージョン:',
@@ -548,14 +548,14 @@
                 '– リンクをコピー: 並び順とフィルターを再現する URL を作ります。ブラウザーがクリップボードを拒否した場合は、手動でコピーできるようダイアログに URL を表示します。',
                 '• 製品ページには GG.deals（価格・セール）と PCGamingWiki（互換性と修正）へのボタンを追加します。',
                 '– PC でプレイできるものだけです。コンソール専用の製品には付きません。Xbox Play Anywhere は PC を含むので付きます。',
-                '– DLC、エディション、パックにも付きます。そこでは検索の的中率が下がりますが（PCGamingWiki は本編を扱い、DLC のページを持ちません）、各ボタンは名前で検索することをツールチップで明示しています。ボタンが付かないのは、ゲーム製品ではないアプリとサブスクリプションです。',
+                '– DLC やエディション、パックにも付きます。そこでは PCGamingWiki がベースゲームを検索します。そちらに記載されているからです。ボタンが付かないのはアプリとサブスクリプションで、ゲーム製品ではないからです。',
                 '– プラットフォームはページ自体、Xbox が翻訳しない「プレイ対象」の一覧から読み取ります。',
                 '– 名前は Microsoft の公開カタログに問い合わせ、同じ問い合わせを繰り返さないよう localStorage に保存します。表示されているタイトルではなく英語名で検索するため必要です。ページは URL を含めて翻訳されており、リンク先の2サイトはどちらも英語で索引されています。カタログが応答しない場合、ボタンは付けません。',
                 '– 再読み込みなしでページ間を移動すると、画面の内容が切り替わるまで少し時間がかかります。表示中のゲームがアドレスのゲームと一致するまで何も付けないので、あるゲームのプラットフォームが別のゲームの名前と組み合わさることはありません。',
                 '– スクリプトはストア全体で読み込まれます。カタログからでも検索からでも、その移動を検知するためです。Xbox は再読み込みせずにページを切り替えるので、こうすることであなたが再読み込みしなくてもボタンが出ます。ゲームページとウィッシュリスト以外では何も描画せず、ストアの他の場所で行うのは地域リダイレクトだけです。',
                 '– GG.deals は Microsoft Store の DRM で絞り込んだ状態で開きます。Steam、GOG、Epic 向けのスクリプトがそれぞれの DRM で行っているのと同じで、セールの一部を隠してしまう既定のストア評価の下限も外してあります。',
                 '– 同じゲームに PC 版とコンソール版のページがあるとき Microsoft が名前に付ける「(PC)」は取り除きます。タイトルの一部ではなく、リンク先のどちらのサイトでも使われていないためです。',
-                '– GG.deals にはエディションを含む完全なタイトルを渡します（索引が翻字されているためアクセントは外します）。PCGamingWiki には Standard、Deluxe、Premium などの販売形態の接尾辞を外して渡します。本編を扱うサイトだからです。Definitive、Anniversary、Special、Remastered のように実際に別リリースであるものはそのまま残します。',
+                '– GG.deals にはエディション込みの完全なタイトルを渡します（索引が翻字されるためアクセント記号は外します）。PCGamingWiki にはゲーム本体を渡します。パッケージ表記（Standard、Deluxe、Premium…）を外し、DLC やエディションの場合はベースゲーム名で検索します。これは Microsoft が同一ゲームの全 SKU で共有する製品グループとして公開している値です。ただしその値がタイトルの中に実際に含まれている場合しか使いません。内部名のことがあり（Devil May Cry 5 Special Edition では「Boost」）、それで検索するのは何もしないより悪いからです。実際に別個の作品（Definitive、Anniversary、Special、Remastered）はそのままにします。',
                 '国・言語の設定は xbox.com の Cookie に保存されます。現在のタブだけでなくストア全体で有効にするためです。それ以外は localStorage に保存されます。外部への通信は、表示中のゲームの英語名を知るための Microsoft 公開カタログへの問い合わせだけです。送るのは URL にある製品コードのみで、Cookie もセッションも送らず、応答は localStorage に保存します。第三者にも作者にも何も送信しません。'
             ]
         },
@@ -574,7 +574,7 @@
             regionTip: 'Xbox 페이지를 리디렉션할 언어와 국가(로캘)를 고르세요. 카탈로그, 검색, 게임 페이지, 이 위시리스트까지 상점 전체에 적용됩니다. "자동"에서는 리디렉션하지 않습니다. "적용"을 누르면 저장하고 바로 리디렉션합니다.',
             aboutTip: '이 스크립트가 하는 모든 것을 확인하세요.',
             ggTip: 'GG.deals에서 Microsoft Store DRM 필터로 제목을 검색합니다. 제목 검색이므로 정확한 게임을 찾지 못할 수 있습니다.',
-            pcgwTip: 'PCGamingWiki에서 제목을 검색합니다(호환성 및 수정). 에디션 접미사는 뺍니다. 제목 검색이라 정확한 문서를 찾지 못할 수 있고, DLC는 자체 문서가 없습니다.',
+            pcgwTip: 'PCGamingWiki(호환성 및 수정)에서 게임 자체를 검색합니다. 에디션 접미사는 빼고, DLC와 패키지는 기본 게임 이름으로 검색합니다. 이름 검색이라 정확한 문서를 찾지 못할 수 있습니다.',
             aboutTitle: '이 스크립트는 무엇을 하나요?',
             aboutName: '이름:',
             aboutVersion: '버전:',
@@ -595,14 +595,14 @@
                 '– 링크 복사: 정렬과 필터를 재현하는 URL을 만듭니다. 브라우저가 클립보드를 막으면 직접 복사할 수 있도록 대화 상자에 URL을 표시합니다.',
                 '• 제품 페이지에는 GG.deals(가격·할인)와 PCGamingWiki(호환성 및 수정) 버튼을 추가합니다.',
                 '– PC에서 플레이할 수 있는 것만 해당됩니다. 콘솔 전용 제품에는 붙지 않고, Xbox Play Anywhere에는 붙습니다. PC를 포함하기 때문입니다.',
-                '– DLC, 에디션, 팩에도 붙습니다. 거기서는 검색이 덜 맞습니다(PCGamingWiki는 본편을 다루고 DLC 문서가 없습니다). 다만 각 버튼은 이름으로 검색한다는 점을 툴팁에 이미 밝히고 있습니다. 버튼이 붙지 않는 것은 게임 제품이 아닌 앱과 구독입니다.',
+                '– DLC와 에디션, 패키지에도 붙습니다. 그 경우 PCGamingWiki는 기본 게임을 검색합니다. 거기에 정리되어 있기 때문입니다. 버튼이 붙지 않는 것은 앱과 구독으로, 게임 제품이 아니기 때문입니다.',
                 '– 플랫폼은 페이지 자체에서, Xbox가 번역하지 않는 "플레이 가능" 목록에서 읽습니다.',
                 '– 이름은 Microsoft 공개 카탈로그에 요청하고 같은 요청을 반복하지 않도록 localStorage에 보관합니다. 보이는 제목이 아니라 영어 이름으로 검색하기 때문에 필요합니다. 페이지는 주소까지 번역되어 있고, 두 사이트 모두 영어로 색인되어 있습니다. 카탈로그가 응답하지 않으면 버튼을 넣지 않습니다.',
                 '– 새로 고침 없이 페이지 사이를 이동하면 화면의 내용이 바뀌는 데 잠시 걸립니다. 화면의 게임이 주소의 게임과 일치할 때까지 아무것도 넣지 않으므로, 한 게임의 플랫폼이 다른 게임의 이름과 짝지어지는 일은 없습니다.',
                 '– 스크립트는 상점 전체에서 로드됩니다. 그 이동이 어디서 오든(카탈로그에서든 검색에서든) 알아차리기 위해서입니다. Xbox는 새로 고침 없이 페이지를 바꾸므로 이렇게 해야 사용자가 새로 고치지 않아도 버튼이 나타납니다. 게임 페이지와 위시리스트 밖에서는 아무것도 그리지 않으며, 상점의 나머지 부분에서 하는 일은 지역 리디렉션뿐입니다.',
                 '– GG.deals는 Microsoft Store DRM으로 이미 필터링된 상태로 열립니다. Steam, GOG, Epic용 스크립트가 각자의 DRM으로 하는 것과 같으며, 할인 일부를 가리는 기본 최소 상점 평점도 빼두었습니다.',
                 '– 같은 게임에 PC 페이지와 콘솔 페이지가 모두 있을 때 Microsoft가 이름에 붙이는 "(PC)"는 제거합니다. 제목의 일부가 아니고 두 대상 사이트 모두 사용하지 않기 때문입니다.',
-                '– GG.deals에는 에디션을 포함한 전체 제목을 보냅니다(색인을 음역하므로 발음 구별 기호는 뺍니다). PCGamingWiki에는 Standard, Deluxe, Premium 같은 패키지 접미사를 빼고 보냅니다. 본편을 다루기 때문입니다. Definitive, Anniversary, Special, Remastered처럼 실제로 별개 출시인 것은 그대로 둡니다.',
+                '– GG.deals에는 에디션을 포함한 전체 제목을 넘깁니다(색인을 음역하므로 발음 부호는 제거). PCGamingWiki에는 게임 자체를 넘깁니다. 패키지 접미사(Standard, Deluxe, Premium…)를 빼고, DLC나 에디션이면 기본 게임 이름으로 검색합니다. 이 이름은 Microsoft가 같은 게임의 모든 SKU가 공유하는 제품 그룹으로 공개하는 값입니다. 다만 그 값이 제목 안에 실제로 들어 있을 때만 씁니다. 내부 이름일 때가 있어서(Devil May Cry 5 Special Edition은 "Boost") 그걸로 검색하면 아무것도 안 하느니만 못하기 때문입니다. 정말 별개의 출시작(Definitive, Anniversary, Special, Remastered)은 그대로 둡니다.',
                 '국가·언어 설정은 xbox.com 쿠키에 저장됩니다. 현재 탭뿐 아니라 상점 전체에 적용되도록 하기 위해서입니다. 나머지는 localStorage에 저장됩니다. 외부로 나가는 유일한 요청은 보고 있는 게임의 영어 이름을 알아내기 위한 Microsoft 공개 카탈로그 요청입니다. 주소에 있는 제품 코드만 보내며 쿠키도 세션도 보내지 않고, 응답은 localStorage에 저장합니다. 제3자에게도 제작자에게도 아무것도 보내지 않습니다.'
             ]
         },
@@ -621,7 +621,7 @@
             regionTip: '选择要将 Xbox 页面重定向到的语言和国家/地区（区域设置）：在整个商店都有效——目录、搜索、游戏页面和本愿望单。选择“自动”则不重定向。点击“应用”即可保存并立即重定向。',
             aboutTip: '查看此脚本的全部功能。',
             ggTip: '在 GG.deals 上按 Microsoft Store DRM 筛选搜索该标题。由于是按标题搜索，可能无法精确匹配到该游戏。',
-            pcgwTip: '在 PCGamingWiki 上搜索该标题（兼容性与修复），不带版本后缀。由于是按标题搜索，可能无法精确匹配到对应条目，而且 DLC 没有独立页面。',
+            pcgwTip: '在 PCGamingWiki（兼容性与修复）上搜索游戏本体：去掉版本后缀，DLC 和捆绑包则按其本体游戏搜索。由于是按名称搜索，可能无法精确对应到该条目。',
             aboutTitle: '这个脚本有什么用？',
             aboutName: '名称：',
             aboutVersion: '版本：',
@@ -642,14 +642,14 @@
                 '– 复制链接：生成一个可还原排序和筛选条件的网址。如果浏览器阻止访问剪贴板，会用对话框显示网址供手动复制。',
                 '• 在商品页面添加通往 GG.deals（价格与优惠）和 PCGamingWiki（兼容性与修复）的按钮。',
                 '– 仅限可在 PC 上游玩的内容。纯主机产品不会获得按钮；Xbox Play Anywhere 会，因为它包含 PC。',
-                '– DLC、各版本和合集也会获得按钮。那里的搜索命中率较低（PCGamingWiki 记录的是本体，没有 DLC 页面），但每个按钮的提示中已经说明是按名称搜索。不会获得按钮的是应用和订阅，它们并非游戏商品。',
+                '– DLC、版本和捆绑包同样会有，而且那时 PCGamingWiki 会搜索本体游戏，因为它就记录在那里。不会加按钮的是应用和订阅，它们不是游戏产品。',
                 '– 平台信息读取自页面本身，来自 Xbox 不会翻译的“可游玩平台”列表。',
                 '– 名称向 Microsoft 的公开目录查询，并保存在 localStorage 中以免重复请求。之所以需要，是因为搜索用的是英文名而不是你看到的标题：页面（连同网址）都是翻译过的，而这两个网站都以英文建立索引。如果目录没有响应，就不添加按钮。',
                 '– 在不重新加载的情况下在页面之间跳转时，屏幕上的内容需要片刻才会更新；在显示的游戏与网址中的游戏一致之前不会添加任何东西，以免把一款游戏的平台和另一款游戏的名称配在一起。',
                 '– 脚本会在整个商店加载，以便无论跳转来自何处（目录或搜索）都能察觉，因为 Xbox 切换页面时不会重新加载，这样按钮无需你手动刷新就会出现。在游戏页面和愿望单之外它什么都不画：在商店其余部分唯一做的就是区域重定向。',
                 '– GG.deals 打开时已按 Microsoft Store 的 DRM 筛选，与 Steam、GOG 和 Epic 脚本对各自 DRM 的做法一致，并且去掉了默认的商店评分下限——那个下限会藏起一部分优惠。',
                 '– 当同一款游戏同时有 PC 和主机页面时，Microsoft 会在名称后加上“(PC)”，脚本会去掉它，因为它不属于标题，两个目标网站也都不带。',
-                '– GG.deals 收到的是含版本在内的完整标题（并去掉变音符号，因为它的索引做了转写）；PCGamingWiki 收到的则去掉了 Standard、Deluxe、Premium 之类的包装后缀，因为它记录的是本体。那些确实属于独立发行的（Definitive、Anniversary、Special、Remastered）则原样保留。',
+                '– GG.deals 收到含版本在内的完整标题（并去掉重音符号，因为它的索引会转写）；PCGamingWiki 收到游戏本体：去掉打包后缀（Standard、Deluxe、Premium…），若是 DLC 或版本则按其本体游戏搜索——这个名称由 Microsoft 作为同一款游戏所有 SKU 共享的产品分组发布。只有当该名称确实出现在标题里时才使用：它有时是内部代号（Devil May Cry 5 Special Edition 是 "Boost"），拿它去搜比什么都不做还糟。真正独立发行的版本（Definitive、Anniversary、Special、Remastered）保持原样。',
                 '国家/语言的偏好保存在 xbox.com 的 Cookie 中，这样才能在整个商店生效，而不只是当前标签页；其余设置保存在 localStorage。唯一的外部请求是向 Microsoft 的公开目录查询你正在浏览的游戏的英文名：只发送网址中的产品代码，不带 Cookie 也不带会话，响应保存在 localStorage。不会向第三方或作者发送任何数据。'
             ]
         }
@@ -840,7 +840,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.6.2'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.7.0'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -1591,9 +1591,26 @@
     // Tipos de producto que NO reciben botones. Es una lista de exclusión y no de
     // inclusión a propósito: lo que no se reconozca pasa. Ver el uso, más abajo.
     const NON_GAME_KINDS = /^(?:application|pass)$/i;
+    // PCGamingWiki documenta el juego, no el empaquetado: ni los DLC ni las ediciones
+    // tienen artículo propio. El nombre del juego está en el mismo JSON que el
+    // título, en `Properties.ProductGroupName` —el "grupo de producto" que Microsoft
+    // comparte entre todos los SKU de un mismo juego—:
+    //   9NMJD11KCRL0  Cyberpunk 2077: Phantom Liberty         -> Cyberpunk 2077
+    //   9P9G5WX8C0VH  Cyberpunk 2077: Ultimate Edition (…)    -> Cyberpunk 2077
+    //   9NKX70BBCDRN  Forza Horizon 5 Standard Edition        -> Forza Horizon 5
+    //
+    // PERO el campo NO siempre trae un nombre público: a veces es un nombre interno
+    // del editor. Comprobado en el mismo catálogo:
+    //   9MZ11KT5KLP6  Devil May Cry 5 Special Edition         -> "Boost"
+    //   9NBLGGH4R2R6  Minecraft Education                     -> "Minecraft Bedrock PG"
+    // Mandar eso a PCGamingWiki es peor que no tocar nada, así que solo se acepta el
+    // grupo si además ESTÁ CONTENIDO en el título del producto, que es justo lo que
+    // distingue "Forza Horizon 5" de "Boost". Si no pasa el filtro, se busca el
+    // título propio, que es lo que se hacía antes.
+    const MIN_GROUP_NAME_LENGTH = 3;
 
     const CATALOG_ENDPOINT = 'https://displaycatalog.mp.microsoft.com/v7.0/products';
-    const CATALOG_CACHE_KEY = 'xbx-catalog-cache';
+    const CATALOG_CACHE_KEY = 'xbx-catalog-cache-v2';
     const CATALOG_CACHE_TTL = 30 * 24 * 60 * 60 * 1000;   // 30 días
     const CATALOG_CACHE_MAX = 200;                        // entradas, para no crecer sin fin
     const CATALOG_TIMEOUT_MS = 8000;
@@ -1634,6 +1651,22 @@
     const DIACRITICS_REGEX = /[̀-ͯ]/g;
     function normalizeForGgDeals(title) {
         return title.normalize('NFD').replace(DIACRITICS_REGEX, '');
+    }
+
+    /**
+     * Nombre del juego al que pertenece la ficha (DLC, edición o SKU suelto), solo
+     * si es de fiar: ver el comentario de MIN_GROUP_NAME_LENGTH.
+     * @param {{title: string, groupName: string}} info - Datos del catálogo.
+     * @returns {string} Nombre del juego, o cadena vacía si no procede usarlo.
+     */
+    function usableGroupName(info) {
+        const group = (info.groupName || '').trim();
+        if (group.length < MIN_GROUP_NAME_LENGTH) return '';
+        const fold = (s) => s.toLowerCase().replace(TRADEMARK_REGEX, '').replace(/\s+/g, ' ').trim();
+        const foldedGroup = fold(group);
+        const foldedTitle = fold(info.title || '');
+        if (foldedGroup === foldedTitle) return '';          // el propio juego: nada que cambiar
+        return foldedTitle.includes(foldedGroup) ? group : '';
     }
 
     // Identificador de producto (Big ID de 12 caracteres) del final de la ruta.
@@ -1717,7 +1750,7 @@
 
     async function fetchCatalogInfo(id) {
         const cached = readCatalogCache(id);
-        if (cached) return { title: cached.title, kind: cached.kind };
+        if (cached) return { title: cached.title, kind: cached.kind, groupName: cached.groupName || '' };
 
         const markets = Array.from(new Set(['US', pageMarket()]));
         for (const market of markets) {
@@ -1732,7 +1765,11 @@
             const title = p && p.LocalizedProperties && p.LocalizedProperties[0]
                 ? p.LocalizedProperties[0].ProductTitle : '';
             if (!title) continue;
-            const info = { title, kind: (p.ProductKind || p.ProductType || '') };
+            const info = {
+                title,
+                kind: (p.ProductKind || p.ProductType || ''),
+                groupName: (p.Properties && p.Properties.ProductGroupName) || ''
+            };
             writeCatalogCache(id, info);
             return info;
         }
@@ -1815,16 +1852,19 @@
         return Array.from(el.classList).filter((c) => c.startsWith(CONTAINER_CLASS_PREFIX)).join(' ');
     }
 
-    // GG.deals sí tiene ficha por edición, así que va el título completo.
-    // PCGamingWiki documenta el juego base, así que va sin el sufijo de SKU.
-    function buildProductLinks(id, rawTitle, anchor) {
+    // GG.deals sí tiene ficha por edición y por DLC, así que va el título completo.
+    // PCGamingWiki documenta el juego base: va sin el sufijo de SKU y, si la ficha
+    // es un DLC, con el nombre del juego al que pertenece en vez del suyo.
+    function buildProductLinks(id, rawTitle, anchor, dlcBaseTitle) {
         injectLinkStyles();
-        const title = rawTitle
+        const clean = (name) => name
             .replace(TRADEMARK_REGEX, '')
             .replace(/\s+/g, ' ')
             .replace(PLATFORM_TAG_REGEX, '')
             .trim();
-        const baseTitle = title.replace(SKU_EDITION_REGEX, '').trim() || title;
+        const title = clean(rawTitle);
+        const forPcgw = clean(dlcBaseTitle || '') || title;
+        const baseTitle = forPcgw.replace(SKU_EDITION_REGEX, '').trim() || forPcgw;
         const box = document.createElement('div');
         box.id = LINKS_ID;
         box.setAttribute(LINKS_PRODUCT_ATTR, id);
@@ -1865,7 +1905,7 @@
         if (document.getElementById(LINKS_ID)) return;
         const anchor = findLinkAnchor();
         if (!anchor) return;
-        anchor.after(buildProductLinks(linksState.id, linksState.title, anchor));
+        anchor.after(buildProductLinks(linksState.id, linksState.title, anchor, linksState.baseTitle));
     }
 
     // Al salir de una ficha (a la lista de deseos, a /games/browse, al home) se
@@ -1933,9 +1973,9 @@
         // Antes solo pasaba 'Game', para no mandar un DLC a PCGamingWiki, que
         // documenta el juego base y no tiene páginas de DLC. Se descartó ese
         // criterio: el resto de scripts de la familia (Steam, GOG, Epic,
-        // IndieGala) ponen sus botones también en DLC y paquetes, y ahí la regla
-        // es que más vale un enlace que puede no acertar —los dos tooltips ya lo
-        // avisan— que no tener ninguno. Xbox era el único que se salía.
+        // IndieGala) ponen sus botones también en DLC y paquetes. Y desde que el
+        // botón de PCGamingWiki de un DLC busca su juego base (ver usableGroupName), el
+        // motivo original ya ni siquiera aplica: el enlace acierta.
         //
         // Se siguen excluyendo app y suscripción: no son producto de juego, así
         // que un botón de precios/compatibilidad ahí no es que falle la búsqueda,
@@ -1946,7 +1986,7 @@
         const anchor = await waitForValue(findLinkAnchor, 10000, token);
         if (token !== productNav || !anchor) return;
 
-        linksState = { id, title: info.title };
+        linksState = { id, title: info.title, baseTitle: usableGroupName(info) };
         ensureProductLinks();
         startLinksObserver();
     }
