@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.7.0
+// @version      2.7.1
 // @description  Sends Xbox Store pages to the language and country you pick from 21 curated locales by rewriting the locale segment of the URL, keeping the choice in a cookie so it holds across the store, and clearing an invalid value instead of looping on it. On your wishlist it adds sort and filters with remembered settings, a shareable link and a 'Learn more' panel. On anything PC-playable, DLC and packs included, it adds GG.deals and PCGamingWiki buttons that search by the English name.
 // @author       g31w0fw0rld
 // @license      MIT
@@ -840,7 +840,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.7.0'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.7.1'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -1795,6 +1795,13 @@
                 border-radius: 4px; font-size: 14px; font-weight: 700; letter-spacing: .3px;
                 text-transform: uppercase; text-decoration: none; cursor: pointer;
                 transition: filter .15s ease;
+            }
+            /* En móvil el min-width de 200 px no cabe dos veces, así que el
+               flex-wrap de arriba los apilaba y la banda ocupaba dos filas. Se
+               suelta el ancho mínimo y se reparten la fila a mitades con
+               flex: 1 1 0, que es como quedan los pares de botones de la ficha. */
+            @media (max-width: 640px) {
+                #${LINKS_ID} .xbx-btn { flex: 1 1 0; min-width: 0; }
             }
             #${LINKS_ID} .xbx-btn:hover { filter: brightness(1.12); text-decoration: none; }
             #${LINKS_ID} .xbx-ico { width: 18px; height: 18px; object-fit: contain; flex: 0 0 auto; }
