@@ -6,9 +6,17 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 
 *Wishlist: sort, direction, "only discounted", "remember", copy link, the redirect locale selector with its Apply button, and "Learn more". / Lista de deseos: orden, dirección, "solo con descuento", "recordar", copiar enlace, el selector de locale de redirección con su botón Aplicar, y "Saber más".*
 
+<img src="docs/screenshot-wishlist-mobile.png" width="375" alt="The same wishlist toolbar at phone width, stacked into rows">
+
+*The same toolbar on a phone: it stacks into rows —sort, the two checkboxes, copy link, the locale selector with Apply, and "Learn more"— above the wishlist itself. / La misma barra en un móvil: se apila en renglones —orden, las dos casillas, copiar enlace, el selector de locale con Apply y "Saber más"— sobre la propia lista.*
+
 ![The GG.deals and PCGamingWiki buttons on an Xbox game page](docs/screenshot-game-page.png)
 
 *Game page: the GG.deals and PCGamingWiki buttons, in their own row between the header and the information block, left-aligned with the first button above. / Ficha de juego: los botones de GG.deals y PCGamingWiki, en su propia banda entre la cabecera y el bloque de información, alineados con el primer botón de arriba.*
+
+<img src="docs/screenshot-game-page-mobile.png" width="375" alt="The two buttons split in half across the width of a phone screen">
+
+*And on a phone the two split the width in half, each taking a side, instead of keeping the width they get on a desktop and leaving the rest of the row empty. / Y en un móvil los dos se reparten el ancho a mitades, cada uno con su lado, en vez de conservar el ancho que tienen en escritorio y dejar vacío el resto del renglón.*
 
 ## English
 
