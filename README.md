@@ -1,6 +1,6 @@
 # Xbox Store Locale Redirect
 
-Tampermonkey userscript that redirects the Xbox Store to your country/language and adds wishlist tools. / Userscript de Tampermonkey que redirige Xbox Store a tu país/idioma y añade herramientas a la lista de deseos.
+Userscript that redirects the Xbox Store to your country/language and adds wishlist tools. / Userscript que redirige Xbox Store a tu país/idioma y añade herramientas a la lista de deseos.
 
 ![The toolbar the script adds above the Xbox wishlist](docs/screenshot-wishlist.png)
 
@@ -53,7 +53,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 **Language:** **13 languages** — Spanish, English, German, French, Italian, Dutch, Portuguese, Polish, Russian, Turkish, Japanese, Korean and Chinese. What wins is the locale you pick in the selector, so the toolbar speaks the same language as the page it sends you to instead of contradicting it; with `Auto`, or before you have picked anything, it falls back to the locale segment of the path (`/ja-jp/…`, which on `xbox.com` *is* the locale), then to `<html lang>`, then to your browser, then to English. The two are still different settings, though: one is how the script talks, the other is the store's region.
 
 **Install:**
-1. Install [Tampermonkey](https://www.tampermonkey.net/).
+1. Install a userscript manager: [Violentmonkey](https://violentmonkey.github.io/) (open source, Chrome/Edge/Firefox) or [Tampermonkey](https://www.tampermonkey.net/). On Chrome and Edge, also turn on **Allow user scripts** on the extension's own page in `chrome://extensions` — without it nothing runs.
 2. Open the installer: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (also on [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) and [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
 
 **Sites:** all of `www.xbox.com`. The **redirect** applies store-wide; the **interface** — wishlist tools, game-page buttons — is only built on `xbox.com/…/wishlist` and `xbox.com/…/games/store/*`, and no other page is drawn on. Loading everywhere is also what makes the buttons appear without a reload: Xbox changes page without reloading, and a script injected only on those two pages never gets to run when you reach a game page from, say, `/games/browse`.
@@ -93,7 +93,7 @@ Tampermonkey userscript that redirects the Xbox Store to your country/language a
 **Idioma:** **13 idiomas** —español, inglés, alemán, francés, italiano, neerlandés, portugués, polaco, ruso, turco, japonés, coreano y chino—. Lo que manda es el locale que elijas en el selector, para que la barra hable el mismo idioma que la página a la que te lleva en vez de contradecirla; con `Auto`, o antes de que elijas nada, cae al segmento de locale de la ruta (`/ja-jp/…`, que en `xbox.com` **es** el locale), luego al `<html lang>`, luego al navegador, luego a inglés. Aun así son dos ajustes distintos: uno es cómo habla el script, el otro es la región de la tienda.
 
 **Instalación:**
-1. Instala [Tampermonkey](https://www.tampermonkey.net/).
+1. Instala un gestor de userscripts: [Violentmonkey](https://violentmonkey.github.io/) (código abierto, Chrome/Edge/Firefox) o [Tampermonkey](https://www.tampermonkey.net/). En Chrome y Edge, activa además **Allow user scripts** en la página de la propia extensión en `chrome://extensions`; sin eso no se ejecuta nada.
 2. Abre el instalador: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (también en [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) y [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
 
 **Sitios:** todo `www.xbox.com`. La **redirección** se aplica en toda la tienda; la **interfaz** —herramientas de la lista de deseos, botones de la ficha— solo se monta en `xbox.com/…/wishlist` y `xbox.com/…/games/store/*`, y en ninguna otra página se pinta nada. Cargar en todas es además lo que hace que los botones salgan sin recargar: Xbox cambia de página sin recargar, y un script inyectado solo en esas dos páginas nunca llega a correr cuando entras a una ficha desde, por ejemplo, `/games/browse`.
