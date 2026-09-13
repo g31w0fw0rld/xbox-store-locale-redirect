@@ -2,6 +2,12 @@
 
 Userscript that redirects the Xbox Store to your country/language and adds wishlist tools. / Userscript que redirige Xbox Store a tu país/idioma y añade herramientas a la lista de deseos.
 
+**⚡ Quick install / Instalación rápida:** **[Install / Instalar](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js)** — also on / también en [GreasyFork](https://greasyfork.org/scripts/573569) · [OpenUserJS](https://openuserjs.org/scripts/g31w0fw0rldgmail.com/Xbox_Store_Locale_Redirect).
+
+> You need a userscript manager first: [Violentmonkey](https://violentmonkey.github.io/) (open source) or [Tampermonkey](https://www.tampermonkey.net/). On Chrome and Edge, also turn on **Allow user scripts** on the extension's own page in `chrome://extensions` — without it nothing runs. Step-by-step under [English](#english).
+>
+> Necesitas antes un gestor de userscripts: [Violentmonkey](https://violentmonkey.github.io/) (código abierto) o [Tampermonkey](https://www.tampermonkey.net/). En Chrome y Edge, activa además **Allow user scripts** en la página de la propia extensión en `chrome://extensions`; sin eso no se ejecuta nada. Pasos detallados en [Español](#español).
+
 ![The toolbar the script adds above the Xbox wishlist](docs/screenshot-wishlist.png)
 
 *Wishlist: sort, direction, "only discounted", "remember", copy link, the redirect locale selector with its Apply button, and "Learn more". / Lista de deseos: orden, dirección, "solo con descuento", "recordar", copiar enlace, el selector de locale de redirección con su botón Aplicar, y "Saber más".*
@@ -54,7 +60,7 @@ Userscript that redirects the Xbox Store to your country/language and adds wishl
 
 **Install:**
 1. Install a userscript manager: [Violentmonkey](https://violentmonkey.github.io/) (open source, Chrome/Edge/Firefox) or [Tampermonkey](https://www.tampermonkey.net/). On Chrome and Edge, also turn on **Allow user scripts** on the extension's own page in `chrome://extensions` — without it nothing runs.
-2. Open the installer: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (also on [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) and [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
+2. Open the installer: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (also on [GreasyFork](https://greasyfork.org/scripts/573569) and [OpenUserJS](https://openuserjs.org/scripts/g31w0fw0rldgmail.com/Xbox_Store_Locale_Redirect)).
 
 **Sites:** all of `www.xbox.com`. The **redirect** applies store-wide; the **interface** — wishlist tools, game-page buttons — is only built on `xbox.com/…/wishlist` and `xbox.com/…/games/store/*`, and no other page is drawn on. Loading everywhere is also what makes the buttons appear without a reload: Xbox changes page without reloading, and a script injected only on those two pages never gets to run when you reach a game page from, say, `/games/browse`.
 
@@ -94,7 +100,7 @@ Userscript that redirects the Xbox Store to your country/language and adds wishl
 
 **Instalación:**
 1. Instala un gestor de userscripts: [Violentmonkey](https://violentmonkey.github.io/) (código abierto, Chrome/Edge/Firefox) o [Tampermonkey](https://www.tampermonkey.net/). En Chrome y Edge, activa además **Allow user scripts** en la página de la propia extensión en `chrome://extensions`; sin eso no se ejecuta nada.
-2. Abre el instalador: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (también en [GreasyFork](https://greasyfork.org/es-419/users/1590477-g31w) y [OpenUserJS](https://openuserjs.org/users/g31w0fw0rldgmail.com/scripts)).
+2. Abre el instalador: [xbox-store-locale-redirect.user.js](https://github.com/g31w0fw0rld/xbox-store-locale-redirect/raw/main/xbox-store-locale-redirect.user.js) (también en [GreasyFork](https://greasyfork.org/scripts/573569) y [OpenUserJS](https://openuserjs.org/scripts/g31w0fw0rldgmail.com/Xbox_Store_Locale_Redirect)).
 
 **Sitios:** todo `www.xbox.com`. La **redirección** se aplica en toda la tienda; la **interfaz** —herramientas de la lista de deseos, botones de la ficha— solo se monta en `xbox.com/…/wishlist` y `xbox.com/…/games/store/*`, y en ninguna otra página se pinta nada. Cargar en todas es además lo que hace que los botones salgan sin recargar: Xbox cambia de página sin recargar, y un script inyectado solo en esas dos páginas nunca llega a correr cuando entras a una ficha desde, por ejemplo, `/games/browse`.
 
