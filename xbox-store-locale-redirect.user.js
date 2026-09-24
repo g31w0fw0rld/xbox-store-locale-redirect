@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Xbox Store Locale Redirect
 // @namespace    https://xbox.com/
-// @version      2.7.3
+// @version      2.7.4
 // @description  Region switch and wishlist tools for the Xbox Store. Xbox picks your region for you, so you cannot see what something costs elsewhere, and the wishlist arrives unsortable and unfiltered. Pick one of 21 locales and the whole store follows —catalog, searches, game pages— while the wishlist gains sorting, filters and a shareable link. It rewrites the URL and never touches your account. The rest is in "Learn more" and in the repository.
 // @icon         data:image/png;base64,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
 // @author       g31w0fw0rld
@@ -841,7 +841,7 @@
     const ORD_ATTR = 'data-xbwl-ord';
     const TOOLBAR_ID = 'xbwl-toolbar';
     const STYLES_ID = 'xbwl-styles';
-    const SCRIPT_VERSION = '2.7.3'; // sincronizar con @version
+    const SCRIPT_VERSION = '2.7.4'; // sincronizar con @version
     const SETTINGS_KEY = 'xbwl-settings';
     const SORTS = ['added', 'name', 'price', 'discount'];
     const SORT_LABELS = { added: t.added, name: t.name, price: t.price, discount: t.discount };
@@ -901,15 +901,20 @@
     // --- Extracción -------------------------------------------------------------
     function parsePrice(txt) {
         if (!txt) return null;
-        const m = txt.replace(/\s/g, '').match(/[\d.]+/);
+        // La coma tiene que entrar en la captura: sin ella «MXN$1,008.49» se
+        // leía como 1 y «19,99 €» como 19, y el orden por precio salía roto.
+        // Miles: coma, punto, apóstrofo (CHF) o espacio (ya quitado arriba).
+        const m = txt.replace(/\s/g, '').match(/\d[\d.,'’]*/);
         if (!m) return null;
-        let s = m[0];
+        let s = m[0].replace(/['’]/g, '').replace(/[.,]+$/, '');
         const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
         if (lastDot >= 0 && lastComma >= 0) {
             if (lastDot > lastComma) s = s.replace(/,/g, '');
             else s = s.replace(/\./g, '').replace(',', '.');
         } else if (lastComma >= 0) {
             s = (s.length - 1 - lastComma === 3) ? s.replace(/,/g, '') : s.replace(',', '.');
+        } else if (s.indexOf('.') !== lastDot) {
+            s = s.replace(/\./g, '');   // 1.234.567: varios puntos, solo miles
         }
         const n = parseFloat(s);
         return isNaN(n) ? null : n;
